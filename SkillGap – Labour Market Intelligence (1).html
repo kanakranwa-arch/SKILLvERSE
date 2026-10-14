@@ -1,0 +1,741 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>SkillGap</title>
+<style>
+:root{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);--bg:#fff;--ink:#000;--mute:#555;--line:#bdbdbd;--soft:#f0f0f0}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#000;--ink:#fff;--mute:#aaa;--line:#444;--soft:#161616}}
+:root[data-theme="dark"]{--bg:#000;--ink:#fff;--mute:#aaa;--line:#444;--soft:#161616}
+*,*::before,*::after{box-sizing:inherit}
+html{scroll-padding-top:calc(env(safe-area-inset-top,0px) + 90px);scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--ink);font:italic 400 18px/1.7 Lora,"Noto Serif Devanagari",Georgia,serif}
+h1,h2,h3{margin:0 0 .5em;line-height:1.12}
+h1{font:italic 700 clamp(36px,7vw,72px)/1.05 "Bodoni Moda","Noto Serif Devanagari",Didot,Georgia,serif;max-width:15ch}
+h2{font:italic 700 clamp(28px,4.5vw,42px)/1.15 "Playfair Display","Noto Serif Devanagari",Georgia,serif}
+h3{font:italic 600 24px "Cormorant Garamond","Noto Serif Devanagari",Georgia,serif}
+.mono,label,th,.eyebrow,.btn,select,.tag{font-family:"Space Mono",ui-monospace,Menlo,monospace;font-style:italic}
+.wrap{max-width:1040px;margin:0 auto;padding:0 20px}
+header{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--bg);border-bottom:1px solid var(--ink)}
+nav{display:flex;flex-wrap:wrap;align-items:center;gap:8px 18px;padding:10px 0}
+.logo{font:italic 700 24px "Playfair Display",Georgia,serif;color:var(--ink);text-decoration:none;margin-right:auto}
+nav a:not(.logo){font:italic 13px "Space Mono",monospace;color:var(--ink);text-decoration:none;border-bottom:1px solid transparent}
+nav a:not(.logo):hover{border-color:var(--ink)}
+.auth{display:none}.in .auth{display:inline}.in .guest{display:none}
+select,.sm{background:var(--bg);color:var(--ink);border:1px solid var(--ink);padding:5px 8px;font-size:13px;cursor:pointer}
+section{padding:56px 0;border-bottom:1px solid var(--line)}
+.hero{padding:80px 0 56px}
+.eyebrow{font-size:13px;letter-spacing:.06em;margin-bottom:16px;color:var(--mute)}
+.lead{font-size:20px;color:var(--mute);max-width:58ch}
+.w{display:inline-block;opacity:0;transform:translateY(.45em);filter:blur(5px);animation:wd .9s cubic-bezier(.2,.7,.2,1) forwards;animation-delay:calc(var(--i)*80ms + 120ms)}
+@keyframes wd{to{opacity:1;transform:none;filter:none}}
+.rv{opacity:0;transform:translateY(14px);transition:opacity .8s ease,transform .8s ease}.rv.on2{opacity:1;transform:none}
+.btn{display:inline-block;background:var(--ink);color:var(--bg);border:1px solid var(--ink);padding:11px 20px;font-size:14px;cursor:pointer;text-decoration:none}
+.btn.alt{background:var(--bg);color:var(--ink)}.btn:disabled{opacity:.5;cursor:default}
+.btn:hover:not(:disabled){filter:invert(1)}
+.row{display:flex;flex-wrap:wrap;gap:10px;margin-top:22px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:0;border:1px solid var(--ink);margin-top:22px}
+.cell{padding:20px;border-right:1px solid var(--line);border-bottom:1px solid var(--line)}
+.cell p{margin:0 0 14px;color:var(--mute);font-size:16px}
+.box{max-width:460px;border:1px solid var(--ink);padding:26px;margin-top:20px}
+label{display:block;font-size:13px;margin:14px 0 4px}
+input,textarea{width:100%;background:var(--bg);color:var(--ink);border:1px solid var(--ink);padding:10px;font:italic 16px Lora,Georgia,serif;border-radius:0}
+textarea{min-height:150px;font:italic 14px/1.5 "Space Mono",monospace;resize:vertical}
+.err{margin-top:12px;font-size:15px;text-decoration:underline}
+.note{font-size:14px;color:var(--mute);margin-top:12px}
+.tw{overflow-x:auto;margin-top:20px}
+table{border-collapse:collapse;width:100%;min-width:520px;font-size:15px}
+th,td{text-align:left;padding:9px 10px;border-bottom:1px solid var(--line)}th{font-size:12px;font-weight:400;color:var(--mute)}
+.Shortage{font-weight:700}.Shortage::before{content:"▲ "}.Balanced::before{content:"● "}.Surplus{text-decoration:underline}.Surplus::before{content:"▽ "}
+svg text{fill:var(--mute);font:italic 11px "Space Mono",monospace}
+.legal{max-width:68ch;padding:56px 0}.legal h2{font-size:24px;margin-top:1.5em}.legal p{color:var(--mute)}
+footer{padding:26px 0;font:italic 13px "Space Mono",monospace;color:var(--mute)}
+footer .wrap{display:flex;flex-wrap:wrap;gap:10px 22px;justify-content:space-between}footer a{color:var(--ink);margin-right:16px}
+a{color:var(--ink)}
+.tabs{display:flex;flex-wrap:wrap;border:1px solid var(--ink);margin:18px 0 26px}
+.tabs button{flex:1 1 auto;background:var(--bg);color:var(--ink);border:0;border-right:1px solid var(--ink);padding:10px 14px;font:italic 14px "Space Mono",monospace;cursor:pointer}
+.tabs button:last-child{border-right:0}.tabs button.on{background:var(--ink);color:var(--bg)}
+.tp{display:none}.tp.on{display:block}
+[hidden]{display:none!important}
+#fx{position:fixed;inset:0;width:100%;height:100%;z-index:56;pointer-events:none;display:none}
+body.film #fx{display:block}
+#vg{position:fixed;inset:0;pointer-events:none;z-index:54;display:none;background:radial-gradient(ellipse at center,transparent 58%,rgba(0,0,0,.26) 100%);animation:flk 1.1s steps(1) infinite}
+body.film #vg{display:block}
+body.still #vg{animation:none}
+@keyframes flk{0%{opacity:1}13%{opacity:.78}27%{opacity:1}44%{opacity:.9}61%{opacity:1}78%{opacity:.84}}
+body.film::after{opacity:.11}
+.spr{position:fixed;top:0;bottom:0;left:0;width:26px;background:var(--ink);z-index:52;display:none}
+.spr::before{content:"";position:absolute;left:8px;width:10px;top:0;bottom:0;background:repeating-linear-gradient(180deg,var(--bg) 0 14px,transparent 14px 30px);background-position:0 calc(var(--sy,0)*-1px)}
+@media (min-width:1180px){body.film .spr{display:block}}
+#rc{position:fixed;right:44px;bottom:8px;font-size:11px;color:var(--mute);z-index:57;display:none}
+body.film #rc{display:block}
+@media (max-width:1179px){#rc{right:12px}}
+body.film main h2{font-family:"IM Fell English","Playfair Display","Noto Serif Devanagari",Georgia,serif;font-weight:400}
+body.film:not(.still) .art svg{animation:gate .5s steps(4) infinite}
+@keyframes gate{0%{transform:translate(0,0)}25%{transform:translate(.7px,-.5px)}50%{transform:translate(-.5px,.6px)}75%{transform:translate(.4px,.4px)}}
+@keyframes iris{from{clip-path:circle(0% at 50% 30%)}to{clip-path:circle(150% at 50% 30%)}}
+body.film:not(.still) .view.on{animation:iris .95s cubic-bezier(.4,0,.2,1) both}
+.ldr{width:min(60vw,260px)}
+.ldc{fill:none;stroke:var(--bg);stroke-width:2}
+.ldw{fill:var(--bg);opacity:.25;transform-origin:110px 110px;animation:sw .55s linear infinite}
+@keyframes sw{to{transform:rotate(360deg)}}
+#ldn{font:italic 700 90px "Bodoni Moda",Georgia,serif;fill:var(--bg)}
+#reel{position:fixed;inset:0;z-index:90;background:var(--ink);color:var(--bg);display:flex;align-items:center;justify-content:center;padding:20px;overflow:auto}
+.rframe{max-width:760px;width:100%;border:6px double var(--bg);padding:28px 24px;text-align:center}
+#rcard{min-height:270px;display:flex;flex-direction:column;justify-content:center}
+.rk,.rt,.rp{animation:ftn .9s steps(1) both}
+.rk{font:italic 16px "IM Fell English",Georgia,serif;letter-spacing:.2em;opacity:.85}
+.rt{font:italic 400 clamp(32px,6vw,56px)/1.1 "IM Fell English","Bodoni Moda","Noto Serif Devanagari",Georgia,serif;margin:.3em 0}
+.rp{font:italic clamp(18px,3vw,26px)/1.5 "IM Fell English",Lora,"Noto Serif Devanagari",Georgia,serif;margin:0 auto;max-width:34ch}
+.rctl{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;align-items:center;margin-top:20px}
+@keyframes ftn{0%{opacity:0}15%{opacity:.7}25%{opacity:.2}40%{opacity:1}55%{opacity:.6}70%{opacity:1}100%{opacity:1}}
+.dlg{position:fixed;inset:0;z-index:90;background:rgba(0,0,0,.6);display:flex;align-items:center;justify-content:center;padding:20px}
+.dlg .box{margin:0;max-width:520px;width:100%}
+.dlg dt{font:italic 14px "Space Mono",monospace;margin-top:10px}.dlg dd{margin:2px 0 0;color:var(--mute)}
+@media (prefers-reduced-motion:reduce){#vg,.rk,.rt,.rp,.ldw,body.film .view.on,body.film .art svg{animation:none!important}}
+
+#bg{position:fixed;inset:0;width:100%;height:100%;z-index:-1;pointer-events:none}
+body::after{content:"";position:fixed;inset:-10%;background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 .9 0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");opacity:.07;pointer-events:none;z-index:55;animation:grain 1s steps(6) infinite}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) body::after{filter:invert(1)}}
+:root[data-theme="dark"] body::after{filter:invert(1)}
+body.still::after{animation:none}
+@keyframes grain{0%{transform:translate(0,0)}20%{transform:translate(-3%,2%)}40%{transform:translate(2%,-3%)}60%{transform:translate(-2%,-1%)}80%{transform:translate(3%,2%)}100%{transform:translate(0,0)}}
+.fb{fill:var(--bg)}.fl{fill:var(--line)}.fm{fill:var(--mute)}
+.bar{transform-box:fill-box;transform-origin:50% 100%;animation:grow 1.1s cubic-bezier(.2,.8,.2,1) both;animation-delay:calc(var(--i)*130ms + .5s)}
+@keyframes grow{from{transform:scaleY(0)}to{transform:none}}
+.wt{animation:twk 3.2s ease-in-out infinite}@keyframes twk{0%,100%{opacity:1}50%{opacity:.12}}
+.spin{transform-box:fill-box;transform-origin:center;animation:spn 40s linear infinite}@keyframes spn{to{transform:rotate(360deg)}}
+.flag{transform-box:fill-box;transform-origin:0 50%;animation:wav 2.4s ease-in-out infinite}@keyframes wav{50%{transform:skewY(7deg) scaleX(.9)}}
+body:not(.ready) .bar{animation-play-state:paused}
+.hero{padding:56px 0 28px}
+.hgrid{display:grid;grid-template-columns:1.05fr .95fr;gap:32px;align-items:center}
+.lgrid{display:grid;grid-template-columns:1fr 1fr;gap:40px;align-items:center}
+@media (max-width:820px){.hgrid,.lgrid{grid-template-columns:1fr}}
+.art svg{display:block;max-width:560px;margin:0 auto}
+.fstrip{height:20px;background:var(--ink);position:relative;margin:10px 0 0}
+.fstrip::after{content:"";position:absolute;left:0;right:0;top:6px;height:8px;background:repeating-linear-gradient(90deg,var(--bg) 0 12px,transparent 12px 24px)}
+.ic{fill:none;stroke:var(--ink);stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round;margin-bottom:6px}
+.pipe p{margin:6px 0 0;font-size:15px;color:var(--mute);line-height:1.5}
+.cell h3{margin-bottom:.25em}
+.steps{margin:0 0 14px;padding-left:22px;color:var(--mute)}.steps li{margin:6px 0}
+details.gl{border:1px solid var(--ink);padding:12px 16px;margin-top:26px;background:var(--bg)}
+details.gl summary{cursor:pointer;font:italic 14px "Space Mono",monospace}
+details.gl dt{margin-top:12px;font-weight:500}details.gl dd{margin:2px 0 0;color:var(--mute)}
+.btn{min-height:44px;display:inline-flex;align-items:center;justify-content:center}
+.sm{min-height:34px}
+.box,.cell,.tabs,table,details.gl{background:var(--bg)}
+.rv.rl:not(.on2){transform:translateX(-26px)}
+@media (prefers-reduced-motion:reduce){.bar,.wt,.spin,.flag,body::after{animation:none!important}}
+
+.sf{fill:var(--ink)}.sn{fill:none}.ss{stroke:var(--ink)}.sm2{stroke:var(--mute)}.sl{stroke:var(--line)}
+svg text.tb{fill:var(--bg)}svg text.ti{fill:var(--ink)}
+.dr{stroke-dasharray:1;stroke-dashoffset:1;animation:dr 1.8s cubic-bezier(.5,0,.2,1) .2s forwards}
+@keyframes dr{to{stroke-dashoffset:0}}
+.pop{animation:pop .9s cubic-bezier(.2,.7,.2,1) both}
+@keyframes pop{from{opacity:0;transform:scale(.7) rotate(-40deg)}to{opacity:1;transform:none}}
+@keyframes vin{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
+.view.on{animation:vin .55s ease both}.tp.on{animation:vin .45s ease both}
+input[type=range]{padding:0;border:0;accent-color:var(--ink);height:28px}
+#intro{position:fixed;inset:0;z-index:100;background:var(--ink);color:var(--bg);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:18px;transition:transform .9s cubic-bezier(.77,0,.18,1);cursor:pointer}
+#intro.out{transform:translateY(-100%)}
+.inw{font:italic 700 clamp(44px,12vw,120px)/1 "Bodoni Moda",Didot,Georgia,serif;text-align:center}
+.il{display:inline-block;opacity:0;transform:translateY(.5em);filter:blur(6px);animation:wd .9s cubic-bezier(.2,.7,.2,1) forwards;animation-delay:calc(var(--i)*80ms + 150ms)}
+.inl{height:2px;width:0;background:var(--bg);animation:gl 1.4s cubic-bezier(.6,0,.2,1) .8s forwards}
+@keyframes gl{to{width:min(60vw,420px)}}
+.ins{font:italic 13px "Space Mono",monospace;letter-spacing:.2em;opacity:0;animation:wd .8s ease 1.5s forwards}
+body:not(.ready) .w{animation-play-state:paused}
+#sp{position:fixed;top:0;left:0;right:0;height:3px;background:var(--ink);transform-origin:0 0;transform:scaleX(0);z-index:60}
+.pipe{list-style:none;display:flex;flex-wrap:wrap;margin:30px 0 0;padding:0;border-top:2px solid var(--ink)}
+.pipe li{flex:1 1 140px;padding:16px 12px 0 0;position:relative;opacity:0}
+.pipe li::before{content:"";position:absolute;top:-7px;left:0;width:12px;height:12px;background:var(--ink);border-radius:50%}
+.pipe b{display:block;font:italic 600 24px "Cormorant Garamond","Noto Serif Devanagari",Georgia,serif}
+.pipe.on2 li{animation:vin .7s ease forwards;animation-delay:calc(var(--i)*140ms)}
+.cell{transition:background .2s}
+@media (prefers-reduced-motion:reduce){.dr{animation:none;stroke-dashoffset:0}.pop,.view.on,.tp.on{animation:none}.pipe li{opacity:1;animation:none!important}#intro{display:none}}
+
+.mem{background:var(--bg);color:var(--ink);text-align:left;font:inherit;cursor:pointer;border:0;border-right:1px solid var(--line);border-bottom:1px solid var(--line)}
+.mem:hover{background:var(--soft)}.mem p{color:var(--mute)}.mem[aria-expanded="true"],.mem[aria-expanded="true"] p{background:var(--ink);color:var(--bg)}
+.skip{position:absolute;left:-999px;top:0;background:var(--ink);color:var(--bg);padding:8px 14px;z-index:20;font:italic 14px "Space Mono",monospace}.skip:focus{left:8px;top:8px}
+#cb{position:fixed;left:0;right:0;bottom:env(safe-area-inset-bottom,0px);background:var(--bg);border-top:2px solid var(--ink);padding:14px 20px;z-index:9;max-height:60vh;overflow:auto}
+#cb p{margin:0 0 8px;font-size:15px;max-width:80ch}#cb .row{margin-top:8px;align-items:center}
+body.cbon{padding-bottom:240px}
+.chk{display:flex;gap:10px;align-items:flex-start;font:italic 15px Lora,Georgia,serif;margin:12px 0}
+input[type=checkbox]{width:20px;height:20px;margin:2px 0 0;accent-color:var(--ink);flex:none}
+::placeholder{color:var(--mute);opacity:1}
+.legal table{min-width:0}.legal td{color:var(--mute)}
+footer button{background:none;border:0;padding:0;color:var(--ink);font:italic 13px "Space Mono",monospace;text-decoration:underline;cursor:pointer}
+.big{font:italic 700 34px "Playfair Display",Georgia,serif;line-height:1.2}
+button:focus-visible,input:focus-visible,textarea:focus-visible,select:focus-visible,a:focus-visible{outline:2px solid var(--ink);outline-offset:2px}
+.view{display:none}.view.on{display:block}
+@media (prefers-reduced-motion:reduce){.w,.rv{animation:none;transition:none;opacity:1;transform:none;filter:none}html{scroll-behavior:auto}}
+</style>
+</head>
+<body>
+<div id="intro" aria-hidden="true"><div class="inw" id="inw">Skill Verse</div><div class="inl"></div><div class="ins">SIH 2026</div></div><div id="sp" aria-hidden="true"></div><canvas id="bg" aria-hidden="true"></canvas><canvas id="fx" aria-hidden="true"></canvas><div id="vg" aria-hidden="true"></div><div class="spr" id="spl" aria-hidden="true"></div><div class="spr" id="spr2" aria-hidden="true" style="left:auto;right:0"></div><div id="rc" class="mono" aria-hidden="true"></div>
+<a class="skip" href="#/" id="skip" data-t="skip"></a>
+<header><div class="wrap"><nav aria-label="Main">
+<a class="logo" href="#/">SkillGap</a>
+<a href="#/" data-t="n_about"></a>
+<a class="auth" href="#/app" data-t="n_app"></a>
+<a class="auth" href="#/plans" data-t="n_plans"></a>
+<a class="guest" href="#/login" data-t="n_login"></a>
+<a class="auth" href="#/" id="out" data-t="n_out"></a>
+<select id="lang" aria-label="Language"><option value="en">English</option><option value="hi">हिन्दी</option><option value="es">Español</option><option value="fr">Français</option><option value="de">Deutsch</option></select>
+<button class="sm" id="th" aria-label="Theme">◐</button><button class="sm" id="mt" type="button" aria-pressed="true" aria-label="Background animation">✦</button><button class="sm" id="fm" type="button" aria-pressed="true" aria-label="Old-film theme">▣</button><button class="sm" id="kbb" type="button" aria-label="Keyboard shortcuts">?</button>
+</nav></div></header>
+
+<main id="main" tabindex="-1" style="outline:0">
+<div id="v-about" class="view"><div class="wrap">
+<div class="hero hgrid"><div><div class="eyebrow" data-t="eyebrow"></div>
+<h1 id="h1" data-t="hero"></h1>
+<p class="lead rv" data-t="lead"></p>
+<div class="row rv"><button class="btn" id="hg" type="button" data-t="guest"></button><a class="btn alt" href="#/login" data-t="cta"></a><button class="btn alt" id="rw" type="button" data-t="r_watch"></button></div>
+<p class="note rv" data-t="hero_note"></p></div>
+<div class="art rv" id="ha"></div></div>
+<div class="fstrip" aria-hidden="true"></div>
+<section><h2 class="rv rl" data-t="how_h"></h2><p class="lead rv" data-t="how_p"></p><ol class="pipe rv" id="pp"></ol></section>
+<section><h2 class="rv rl" data-t="who_h"></h2><div class="grid" id="wh"></div></section>
+<section><h2 class="rv rl" data-t="demo_h"></h2><div class="tw" id="dm" style="min-height:270px"></div><p class="note" data-t="demo_c"></p></section>
+<section><h2 class="rv rl" data-t="about_h"></h2><p class="lead rv" data-t="about_p"></p></section>
+<section style="border:0"><h2 class="rv rl" data-t="team_h"></h2><p class="note" data-t="m_hint"></p><div class="grid" id="tm"></div><div id="md" class="box" style="max-width:none" aria-live="polite" hidden></div></section>
+</div></div>
+
+<div id="v-login" class="view"><div class="wrap lgrid" style="padding-top:56px;padding-bottom:56px"><div>
+<h2 data-t="login_h"></h2>
+<form class="box" id="f"><label data-t="email" for="em"></label><input id="em" type="email" autocomplete="email" required>
+<label data-t="pass" for="pw"></label><input id="pw" type="password" autocomplete="current-password" required>
+<label class="chk"><input type="checkbox" id="c2"><span data-t="c_age"></span></label><label class="chk"><input type="checkbox" id="c1"><span data-t="c_terms"></span></label><p class="note"><a href="#/terms" data-t="f_terms"></a> · <a href="#/privacy" data-t="f_priv"></a></p><div class="row"><button class="btn" type="submit" data-t="login"></button><button class="btn alt" type="button" id="su" data-t="signup"></button><button class="btn alt" type="button" id="gb" data-t="guest"></button></div>
+<div class="err" id="lerr" role="alert"></div></form>
+<p class="note" style="max-width:460px" data-t="login_note"></p><p class="note" style="max-width:460px" data-t="guest_note"></p>
+</div><div class="art" id="la"></div></div></div>
+
+<div id="v-app" class="view"><div class="wrap" style="padding-top:40px;padding-bottom:56px">
+<h2 data-t="app_h"></h2><p class="note" id="who"></p>
+<div class="tabs" id="tabs"><button data-tab="ov" data-t="tab1"></button><button data-tab="da" data-t="tab2"></button><button data-tab="sk" data-t="tab3"></button><button data-tab="gp" data-t="tab4"></button><button data-tab="tr" data-t="tab7"></button><button data-tab="ro" data-t="tab5"></button><button data-tab="rv" data-t="tab6"></button></div>
+<div class="tp" id="tab-ov"></div>
+<div class="tp" id="tab-da">
+<p class="lead">Load your own labour-market data. One line per skill and region:</p>
+<p class="note mono">skill; region; monthly demand history (3+ numbers); supply per month</p>
+<label for="src">Source name</label><input id="src" placeholder="e.g. Job portal export, Sept 2026">
+<label for="asof">Data as of</label><input id="asof" type="date">
+<label for="inp">Data</label><textarea id="inp" spellcheck="false" placeholder="Data Analytics; Jaipur; 80,92,101,115,126,140; 110"></textarea>
+<div class="row"><button class="btn" id="load">Validate &amp; load</button><button class="btn alt" id="upb">Upload .csv / .txt</button><input id="file" type="file" accept=".csv,.txt,text/plain" hidden><button class="btn alt" id="smp">Load illustrative sample</button><button class="btn alt" id="clr">Clear data</button></div>
+<div class="err" id="err" role="alert"></div><div id="dinfo"></div></div>
+<div class="tp" id="tab-sk">
+<p class="lead">Skill extraction from job-posting text. Paste postings separated by a blank line or a line of <code>---</code>.</p>
+<textarea id="posts" spellcheck="false" placeholder="Hiring a Data Analyst. Skills: SQL, Power BI, Python.&#10;&#10;Cloud engineer needed with AWS and Docker experience."></textarea>
+<div class="row"><button class="btn" id="ext">Extract skills</button><button class="btn alt" id="xcp">Copy as lines</button></div>
+<div id="xout"></div>
+<p class="note">Extraction here is rule-based matching against a built-in taxonomy of 12 skills. It does not call an external AI model. Use the counts as one month's demand signal when building history.</p></div>
+<div class="tp" id="tab-gp"></div>
+<div class="tp" id="tab-tr"></div>
+<div class="tp" id="tab-ro"></div>
+<div class="tp" id="tab-rv"></div>
+<p class="note">Method: linear trend on your monthly history, 12-month average forecast, 80% range from the fit's residuals, gap = forecast − supply (shortage above +10% of supply, surplus below −10%). Statistics support decisions; people review them.</p>
+</div></div>
+
+<div id="v-plans" class="view"><div class="wrap" style="padding-top:56px;padding-bottom:56px">
+<h2 data-t="plans_h"></h2><p class="lead" data-t="plans_p"></p>
+<div class="grid" id="pl"></div>
+</div></div>
+
+<div id="v-privacy" class="view"><div class="wrap legal">
+<h2>Privacy Policy</h2><p>Last updated: 13 October 2026 · English only</p>
+<h3>What this is</h3><p>SkillGap is a non-commercial student prototype built for Smart India Hackathon 2026.</p>
+<h3>What we collect, and why</h3><p><b>Guests:</b> nothing is sent to us. Your work stays in this browser tab.</p><p><b>Accounts:</b> an email address and a password, only so you can log in. We also keep your chosen plan and your workspace (the data you load and your review decisions). We do not ask for your name, phone number, location or date of birth. The password is stored only as a salted hash.</p>
+<h3>Where it is stored</h3><p>In your own browser (local storage), on this device only. It is not uploaded to any server we run, so we cannot see it, and it cannot be recovered if you clear your browser data.</p>
+<h3>Team details</h3><p>The Team section of the home page shows the six team members' names, stream and contact details (email and mobile), revealed when a member is tapped. Any visitor can see them.</p><h3>Age</h3><p>Accounts are for people aged 18 or older, and you confirm this when creating an account. Anyone younger can use guest mode, which collects no personal data. We do not store your age.</p>
+<h3>Third parties</h3><p>Google Fonts is the only third-party service, and it loads only if you allow it in the cookie banner. When allowed, your browser requests font files from Google, which receives your IP address. There are no analytics, advertising or tracking tools. This page is delivered by Claude's artifact hosting, which may keep standard server logs.</p>
+<h3>Emails</h3><p>We do not send emails. If that ever changes, you will be asked to opt in first and every email will carry an unsubscribe link.</p>
+<h3>Your rights and deletion</h3><p>You can export your data, clear your workspace, delete your account, or erase everything this site stored in your browser from the <a href="#/data">Data &amp; deletion</a> page. These actions take effect immediately.</p>
+<h3>Changes</h3><p>If a server or any new data collection is added, this policy will be updated first.</p>
+<p><a href="#/">← Home</a></p></div></div>
+
+<div id="v-refund" class="view"><div class="wrap legal">
+<h2>Refund Policy</h2><p>Last updated: 13 October 2026 · English only</p>
+<h3>Current status</h3><p>All plans are free during the pilot. We do not take payments, so nothing is charged and nothing needs refunding.</p>
+<h3>No hidden fees</h3><p>There are no subscription, setup, usage or cancellation fees.</p>
+<h3>If paid plans are introduced later</h3><p>The full price, including taxes, will be shown before you commit. Nothing will be pre-selected or renewed automatically without your clear agreement. A refund policy with its conditions will be published here before any charge is made.</p>
+<p><a href="#/">← Home</a></p></div></div>
+
+<div id="v-cookies" class="view"><div class="wrap legal">
+<h2>Cookie Policy</h2><p>Last updated: 13 October 2026 · English only</p>
+<h3>Cookies</h3><p>This site sets no cookies. It uses your browser's local and session storage, which works in a similar way, so we describe it here.</p>
+<div class="tw"><table><thead><tr><th>Name</th><th>Purpose</th><th>Type</th><th>Lasts</th></tr></thead><tbody>
+<tr><td>sg_lang</td><td>Remembers your language</td><td>Essential</td><td>Until you clear it</td></tr>
+<tr><td>sg_consent</td><td>Remembers your choice in the cookie banner</td><td>Essential</td><td>Until you clear it</td></tr>
+<tr><td>sg_users</td><td>Your account (email, password hash, plan)</td><td>Essential, only if you create an account</td><td>Until you delete it</td></tr>
+<tr><td>sg_ws_…</td><td>Your saved workspace</td><td>Essential</td><td>Until you delete it (guests: until the tab closes)</td></tr>
+<tr><td>sg_motion</td><td>Remembers if you turned background animation off</td><td>Essential</td><td>Until you clear it</td></tr><tr><td>sg_intro</td><td>Shows the opening animation once per tab</td><td>Essential</td><td>Until the tab closes</td></tr><tr><td>sg_film</td><td>Remembers if you turned the old-film theme off</td><td>Essential</td><td>Until you clear it</td></tr><tr><td>sg_session</td><td>Keeps you logged in</td><td>Essential</td><td>Until the tab closes</td></tr></tbody></table></div>
+<h3>Optional: Google Fonts</h3><p>If you choose "Allow Google Fonts", your browser loads typefaces from Google, which receives your IP address. If you choose "Essential only", the site uses default system fonts instead.</p>
+<h3>No analytics or advertising</h3><p>We use no analytics, advertising or tracking tools.</p>
+<h3>Change your choice</h3><p>Use "Cookie settings" in the footer at any time, or erase everything on the <a href="#/data">Data &amp; deletion</a> page.</p>
+<p><a href="#/">← Home</a></p></div></div>
+
+<div id="v-contact" class="view"><div class="wrap legal">
+<h2>Contact &amp; business details</h2>
+<h3>Who we are</h3><p><b>SkillGap</b>, a non-commercial student prototype for Smart India Hackathon 2026. No goods or services are sold.</p>
+<p>Team Skill Verse: Namra Choudhary (team leader), Sonam, Harshlata, Anshu Kumawat, Hemang Choudhary, Amit Singh. Tap a name on the <a href="#/">home page</a> to see their details.</p>
+<p>Institution: Bhartiya Institute of Engineering &amp; Technology, Near Charan Singh Circle, N.H. 11, P.O. Bajaj Gram Sanwali, Sikar 332021, Rajasthan, India. Approved by AICTE, New Delhi; affiliated to Bikaner Technical University, Bikaner. Website: www.bietsikar.ac.in</p>
+<p id="ce" hidden></p>
+<h3>Privacy and deletion requests</h3><p>Everything this site stores is in your own browser, so you can export or delete it yourself on the <a href="#/data">Data &amp; deletion</a> page.</p>
+<h3>Credits and licences</h3><p>Typefaces: Bodoni Moda, Playfair Display, Cormorant Garamond, Lora, Space Mono, Noto Serif Devanagari and IM Fell English, all licensed under the SIL Open Font License 1.1 and served by Google Fonts. The illustrations and icons are original vector drawings made for this site. It uses no photographs, no third-party images and no third-party code libraries.</p>
+<p><a href="#/">← Home</a></p></div></div>
+
+<div id="v-data" class="view"><div class="wrap legal">
+<h2>Data &amp; deletion</h2>
+<p>Everything this site stores is in your browser, so these buttons act immediately and cannot be undone.</p>
+<div class="row"><button class="btn alt" id="dex">Export my data (copy as JSON)</button></div>
+<div class="row"><button class="btn alt" id="dws">Clear my workspace</button></div>
+<div class="row"><button class="btn alt" id="dac">Delete my account and all its data</button></div>
+<div class="row"><button class="btn alt" id="dall">Erase all site data in this browser</button></div>
+<div class="err" id="dmsg" role="status"></div>
+<p class="note">Guests: "Delete my account" clears your guest session. "Erase all" also removes your language and cookie choices and every account stored in this browser.</p>
+<p><a href="#/">← Home</a></p></div></div>
+
+<div id="v-terms" class="view"><div class="wrap legal">
+<h2>Terms &amp; Conditions</h2><p>Last updated: 13 October 2026 · English only</p>
+<h3>Prototype status</h3><p>Provided as is, without warranties. Features may change or stop at any time.</p>
+<h3>Not advice</h3><p>Results are mathematical estimates from the numbers you enter. They are not employment, education, financial or policy advice. Verify independently with human review.</p>
+<h3>Plans</h3><p>All plans are free during the pilot. No payment is taken, and choosing a plan creates no contract.</p>
+<h3>Accounts and age</h3><p>Accounts are for people aged 18 or older. Guest mode needs no account.</p><h3>Your use</h3><p>You are responsible for your data and for how you use results. Do not misuse or disrupt the site.</p>
+<h3>Liability</h3><p>To the extent permitted by law, the team is not liable for losses arising from use of this prototype.</p>
+<p><a href="#/">← Home</a></p></div></div>
+</main>
+
+<footer><div class="wrap"><div>© 2026 SkillGap · SIH 2026 · Non-commercial prototype</div><div><a href="#/privacy" data-t="f_priv"></a><a href="#/terms" data-t="f_terms"></a><a href="#/refund" data-t="f_refund"></a><a href="#/cookies" data-t="f_cookie"></a><a href="#/contact" data-t="f_contact"></a><a href="#/data" data-t="f_data"></a><button id="cset" data-t="f_cset"></button></div></div></footer>
+<div id="reel" role="dialog" aria-modal="true" aria-label="Story" hidden><div class="rframe"><div id="rcard" aria-live="polite"></div><div class="rctl"><button class="btn alt" id="rpv" type="button" data-t="r_prev"></button><button class="btn alt" id="rpp" type="button"></button><button class="btn alt" id="rnx" type="button" data-t="r_next"></button><button class="btn alt" id="rcl" type="button" data-t="r_close"></button><span id="rn" class="mono" aria-hidden="true"></span></div></div></div>
+<div id="kb" class="dlg" role="dialog" aria-modal="true" aria-label="Keyboard shortcuts" hidden><div class="box"><h3 data-t="kb_t"></h3><dl><dt>1 – 7</dt><dd>Switch engine tabs</dd><dt>?</dt><dd>Open this help</dd><dt>f</dt><dd>Turn the old-film theme on or off</dd><dt>m</dt><dd>Turn background animation on or off</dd><dt>Esc</dt><dd>Close a dialog</dd></dl><div class="row"><button class="btn alt" id="kbc" type="button" data-t="r_close"></button></div></div></div>
+<div id="cb" role="region" aria-label="Cookie and storage consent" hidden><p data-t="cb_text"></p><div class="row"><button class="btn" id="cbr" data-t="cb_rej"></button><button class="btn" id="cba" data-t="cb_acc"></button><a href="#/cookies" data-t="f_cookie"></a></div></div>
+
+<script>
+(function(){
+var T={
+en:{n_about:"About",n_app:"Engine",n_plans:"Plans",n_login:"Log in",n_out:"Log out",eyebrow:"Smart India Hackathon 2026 · Prototype",hero:"Compare skill demand with trained supply, using your own data.",lead:"A student prototype that fits a simple trend to the data you provide, forecasts skill demand and shows where it may exceed trained supply. Results are estimates; a person should review them.",cta:"Log in to open the engine",about_h:"About us",about_p:"We are Team Skill Verse, six engineering students (Computer Science & Engineering and Mechanical) at Bhartiya Institute of Engineering & Technology, Sikar, affiliated to Bikaner Technical University. Our problem: AI-enabled labour market intelligence and skill demand–supply forecasting.",how_h:"How it works",how_p:"Collect → Understand → Forecast → Compare → Recommend. A review tab lets a person accept, modify or reject each recommendation.",team_h:"Team Skill Verse",login_h:"Log in or create an account",email:"Email",pass:"Password (8+ characters)",login:"Log in",signup:"Create account",login_note:"Prototype notice: accounts are stored only in this browser on this device, not on a server. Do not reuse an important password.",e_cred:"Wrong email or password.",e_exist:"This email already has an account.",e_pw:"Password must be at least 8 characters.",e_mail:"Enter a valid email.",app_h:"Gap engine",app_p:"Enter monthly demand history (3+ values) and current supply per skill. A linear trend projects the next 12 months. Runs in your browser.",fmt:"One line per skill:  skill; history; supply",run:"Calculate",ex:"Load illustrative example",clr:"Clear",c_skill:"Skill",c_fc:"Forecast (12-mo avg)",c_sup:"Supply",c_gap:"Gap",c_st:"Status",Shortage:"Shortage",Balanced:"Balanced",Surplus:"Surplus",e_line:"Check line",ex_note:"Example numbers are made up to show behaviour, not real data. Gap = forecast − supply; shortage above +10% of supply, surplus below −10%.",plans_h:"Plans",plans_p:"All plans are free during the pilot. No payment is collected.",p1:"Learner",p1d:"For students choosing which skills to learn.",p2:"Institute & employer",p2d:"For planning courses and hiring against demand.",p3:"Policy & region",p3d:"For regional workforce planning.",choose:"Choose",cur:"Your plan",f_priv:"Privacy Policy",f_terms:"Terms"},
+hi:{n_about:"परिचय",n_app:"इंजन",n_plans:"प्लान",n_login:"लॉग इन",n_out:"लॉग आउट",eyebrow:"स्मार्ट इंडिया हैकाथॉन 2026 · प्रोटोटाइप",hero:"अपने डेटा से कौशल की मांग और प्रशिक्षित आपूर्ति की तुलना करें।",lead:"एक छात्र प्रोटोटाइप जो आपके दिए डेटा पर सरल ट्रेंड लगाकर कौशल मांग का अनुमान देता है और दिखाता है कि मांग कहाँ प्रशिक्षित आपूर्ति से ज़्यादा हो सकती है। नतीजे अनुमान हैं; किसी व्यक्ति को उनकी समीक्षा करनी चाहिए।",cta:"इंजन खोलने के लिए लॉग इन करें",about_h:"हमारे बारे में",about_p:"हम टीम Skill Verse हैं: भारतीय इंस्टिट्यूट ऑफ इंजीनियरिंग एंड टेक्नोलॉजी, सीकर (बीकानेर तकनीकी विश्वविद्यालय से संबद्ध) के कंप्यूटर साइंस और मैकेनिकल के छह इंजीनियरिंग छात्र। हमारी समस्या: श्रम बाज़ार की AI आधारित जानकारी और कौशल मांग–आपूर्ति पूर्वानुमान।",how_h:"यह कैसे काम करता है",how_p:"जमा करें → समझें → पूर्वानुमान → तुलना → सुझाव। समीक्षा टैब में कोई व्यक्ति हर सुझाव को स्वीकार, संशोधित या अस्वीकार कर सकता है।",team_h:"टीम Skill Verse",login_h:"लॉग इन करें या खाता बनाएं",email:"ईमेल",pass:"पासवर्ड (कम से कम 8 अक्षर)",login:"लॉग इन",signup:"खाता बनाएं",login_note:"प्रोटोटाइप सूचना: खाते केवल इसी डिवाइस के ब्राउज़र में सेव होते हैं, किसी सर्वर पर नहीं। कोई ज़रूरी पासवर्ड दोबारा न रखें।",e_cred:"ईमेल या पासवर्ड गलत है।",e_exist:"इस ईमेल का खाता पहले से है।",e_pw:"पासवर्ड कम से कम 8 अक्षर का हो।",e_mail:"सही ईमेल डालें।",app_h:"गैप इंजन",app_p:"हर कौशल के लिए मासिक मांग का इतिहास (3+ मान) और मौजूदा आपूर्ति डालें। रेखीय ट्रेंड अगले 12 महीनों का अनुमान देता है। सब आपके ब्राउज़र में चलता है।",fmt:"हर कौशल की एक पंक्ति:  कौशल; इतिहास; आपूर्ति",run:"गणना करें",ex:"उदाहरण भरें",clr:"साफ़ करें",c_skill:"कौशल",c_fc:"पूर्वानुमान (12 माह औसत)",c_sup:"आपूर्ति",c_gap:"अंतर",c_st:"स्थिति",Shortage:"कमी",Balanced:"संतुलित",Surplus:"अधिशेष",e_line:"पंक्ति जांचें",ex_note:"उदाहरण के आंकड़े केवल दिखाने के लिए बनाए गए हैं, असली डेटा नहीं। अंतर = पूर्वानुमान − आपूर्ति; आपूर्ति के +10% से ऊपर कमी, −10% से नीचे अधिशेष।",plans_h:"प्लान",plans_p:"पायलट के दौरान सभी प्लान मुफ़्त हैं। कोई भुगतान नहीं लिया जाता।",p1:"शिक्षार्थी",p1d:"कौन-सा कौशल सीखें, यह चुनने वाले छात्रों के लिए।",p2:"संस्थान और नियोक्ता",p2d:"मांग के अनुसार कोर्स और भर्ती की योजना के लिए।",p3:"नीति और क्षेत्र",p3d:"क्षेत्रीय कार्यबल योजना के लिए।",choose:"चुनें",cur:"आपका प्लान",f_priv:"गोपनीयता नीति",f_terms:"शर्तें"},
+es:{n_about:"Acerca de",n_app:"Motor",n_plans:"Planes",n_login:"Iniciar sesión",n_out:"Cerrar sesión",eyebrow:"Smart India Hackathon 2026 · Prototipo",hero:"Compara la demanda de habilidades con la oferta formada, con tus propios datos.",lead:"Un prototipo estudiantil que ajusta una tendencia simple a los datos que aportas, pronostica la demanda de habilidades y muestra dónde podría superar la oferta formada. Los resultados son estimaciones; una persona debe revisarlos.",cta:"Inicia sesión para abrir el motor",about_h:"Sobre nosotros",about_p:"Somos el equipo Skill Verse, seis estudiantes de ingeniería (Informática y Mecánica) del Bhartiya Institute of Engineering & Technology, Sikar, afiliado a la Universidad Técnica de Bikaner. Nuestro reto: inteligencia del mercado laboral con IA y pronóstico de oferta y demanda de habilidades.",how_h:"Cómo funciona",how_p:"Recopilar → Comprender → Pronosticar → Comparar → Recomendar. Una pestaña de revisión permite a una persona aceptar, modificar o rechazar cada recomendación.",team_h:"Equipo Skill Verse",login_h:"Inicia sesión o crea una cuenta",email:"Correo",pass:"Contraseña (mín. 8 caracteres)",login:"Iniciar sesión",signup:"Crear cuenta",login_note:"Aviso de prototipo: las cuentas se guardan solo en este navegador y dispositivo, no en un servidor. No reutilices una contraseña importante.",e_cred:"Correo o contraseña incorrectos.",e_exist:"Este correo ya tiene una cuenta.",e_pw:"La contraseña debe tener al menos 8 caracteres.",e_mail:"Introduce un correo válido.",app_h:"Motor de brechas",app_p:"Introduce el historial mensual de demanda (3+ valores) y la oferta actual por habilidad. Una tendencia lineal proyecta los próximos 12 meses. Se ejecuta en tu navegador.",fmt:"Una línea por habilidad:  habilidad; historial; oferta",run:"Calcular",ex:"Cargar ejemplo ilustrativo",clr:"Borrar",c_skill:"Habilidad",c_fc:"Previsión (media 12 m)",c_sup:"Oferta",c_gap:"Brecha",c_st:"Estado",Shortage:"Escasez",Balanced:"Equilibrado",Surplus:"Excedente",e_line:"Revisa la línea",ex_note:"Los números de ejemplo son inventados para mostrar el funcionamiento, no son datos reales. Brecha = previsión − oferta; escasez por encima de +10 % de la oferta, excedente por debajo de −10 %.",plans_h:"Planes",plans_p:"Todos los planes son gratuitos durante el piloto. No se cobra nada.",p1:"Estudiante",p1d:"Para quienes eligen qué habilidades aprender.",p2:"Institución y empresa",p2d:"Para planificar cursos y contrataciones según la demanda.",p3:"Política y región",p3d:"Para la planificación laboral regional.",choose:"Elegir",cur:"Tu plan",f_priv:"Privacidad",f_terms:"Términos"},
+fr:{n_about:"À propos",n_app:"Moteur",n_plans:"Offres",n_login:"Connexion",n_out:"Déconnexion",eyebrow:"Smart India Hackathon 2026 · Prototype",hero:"Comparez la demande de compétences à l'offre formée, avec vos propres données.",lead:"Un prototype étudiant qui ajuste une tendance simple aux données fournies, prévoit la demande de compétences et montre où elle pourrait dépasser l'offre formée. Les résultats sont des estimations ; une personne doit les relire.",cta:"Connectez-vous pour ouvrir le moteur",about_h:"Qui sommes-nous",about_p:"Nous sommes l'équipe Skill Verse, six étudiants en ingénierie (informatique et mécanique) du Bhartiya Institute of Engineering & Technology, Sikar, affilié à l'Université technique de Bikaner. Notre sujet : intelligence du marché du travail par IA et prévision de l'offre et de la demande de compétences.",how_h:"Comment ça marche",how_p:"Collecter → Comprendre → Prévoir → Comparer → Recommander. Un onglet de revue permet à une personne d'accepter, modifier ou rejeter chaque recommandation.",team_h:"Équipe Skill Verse",login_h:"Connectez-vous ou créez un compte",email:"E-mail",pass:"Mot de passe (8 caractères min.)",login:"Connexion",signup:"Créer un compte",login_note:"Avis prototype : les comptes sont stockés uniquement dans ce navigateur, sur cet appareil, pas sur un serveur. Ne réutilisez pas un mot de passe important.",e_cred:"E-mail ou mot de passe incorrect.",e_exist:"Cet e-mail a déjà un compte.",e_pw:"Le mot de passe doit faire au moins 8 caractères.",e_mail:"Saisissez un e-mail valide.",app_h:"Moteur d'écarts",app_p:"Saisissez l'historique mensuel de la demande (3+ valeurs) et l'offre actuelle par compétence. Une tendance linéaire projette les 12 prochains mois. Tout s'exécute dans votre navigateur.",fmt:"Une ligne par compétence :  compétence; historique; offre",run:"Calculer",ex:"Charger un exemple",clr:"Effacer",c_skill:"Compétence",c_fc:"Prévision (moy. 12 mois)",c_sup:"Offre",c_gap:"Écart",c_st:"Statut",Shortage:"Pénurie",Balanced:"Équilibré",Surplus:"Excédent",e_line:"Vérifiez la ligne",ex_note:"Les chiffres d'exemple sont inventés pour illustrer, ce ne sont pas des données réelles. Écart = prévision − offre ; pénurie au-delà de +10 % de l'offre, excédent en dessous de −10 %.",plans_h:"Offres",plans_p:"Toutes les offres sont gratuites pendant le pilote. Aucun paiement n'est demandé.",p1:"Apprenant",p1d:"Pour les étudiants qui choisissent leurs compétences.",p2:"Institut et employeur",p2d:"Pour planifier formations et recrutements selon la demande.",p3:"Politique et région",p3d:"Pour la planification régionale de la main-d'œuvre.",choose:"Choisir",cur:"Votre offre",f_priv:"Confidentialité",f_terms:"Conditions"},
+de:{n_about:"Über uns",n_app:"Engine",n_plans:"Tarife",n_login:"Anmelden",n_out:"Abmelden",eyebrow:"Smart India Hackathon 2026 · Prototyp",hero:"Vergleichen Sie die Nachfrage nach Fähigkeiten mit dem ausgebildeten Angebot, mit Ihren eigenen Daten.",lead:"Ein Studierendenprototyp, der an Ihre Daten einen einfachen Trend anpasst, die Nachfrage nach Fähigkeiten prognostiziert und zeigt, wo sie das ausgebildete Angebot übersteigen kann. Ergebnisse sind Schätzungen; eine Person sollte sie prüfen.",cta:"Anmelden, um die Engine zu öffnen",about_h:"Über uns",about_p:"Wir sind Team Skill Verse, sechs Ingenieurstudierende (Informatik und Maschinenbau) am Bhartiya Institute of Engineering & Technology, Sikar, angeschlossen an die Bikaner Technical University. Unser Thema: KI-gestützte Arbeitsmarktanalyse und Prognose von Angebot und Nachfrage bei Fähigkeiten.",how_h:"So funktioniert es",how_p:"Sammeln → Verstehen → Prognostizieren → Vergleichen → Empfehlen. Im Prüfungs-Tab kann eine Person jede Empfehlung annehmen, ändern oder ablehnen.",team_h:"Team Skill Verse",login_h:"Anmelden oder Konto erstellen",email:"E-Mail",pass:"Passwort (mind. 8 Zeichen)",login:"Anmelden",signup:"Konto erstellen",login_note:"Prototyp-Hinweis: Konten werden nur in diesem Browser auf diesem Gerät gespeichert, nicht auf einem Server. Verwenden Sie kein wichtiges Passwort erneut.",e_cred:"E-Mail oder Passwort falsch.",e_exist:"Für diese E-Mail existiert bereits ein Konto.",e_pw:"Das Passwort muss mindestens 8 Zeichen haben.",e_mail:"Gültige E-Mail eingeben.",app_h:"Lücken-Engine",app_p:"Geben Sie den monatlichen Nachfrageverlauf (3+ Werte) und das aktuelle Angebot je Fähigkeit ein. Ein linearer Trend prognostiziert die nächsten 12 Monate. Läuft in Ihrem Browser.",fmt:"Eine Zeile pro Fähigkeit:  Fähigkeit; Verlauf; Angebot",run:"Berechnen",ex:"Beispiel laden",clr:"Leeren",c_skill:"Fähigkeit",c_fc:"Prognose (Ø 12 Mon.)",c_sup:"Angebot",c_gap:"Lücke",c_st:"Status",Shortage:"Mangel",Balanced:"Ausgeglichen",Surplus:"Überschuss",e_line:"Zeile prüfen",ex_note:"Die Beispielzahlen sind erfunden, um die Funktion zu zeigen, keine echten Daten. Lücke = Prognose − Angebot; Mangel über +10 % des Angebots, Überschuss unter −10 %.",plans_h:"Tarife",plans_p:"Alle Tarife sind während der Pilotphase kostenlos. Es wird nichts abgebucht.",p1:"Lernende",p1d:"Für Studierende, die Fähigkeiten zum Lernen wählen.",p2:"Institut & Arbeitgeber",p2d:"Zur Planung von Kursen und Einstellungen nach Nachfrage.",p3:"Politik & Region",p3d:"Für die regionale Arbeitskräfteplanung.",choose:"Wählen",cur:"Ihr Tarif",f_priv:"Datenschutz",f_terms:"Bedingungen"}
+};
+var $=function(i){return document.getElementById(i)},mem={},lang='en',lastRes=null,lastErr='';
+function get(k,s){try{var v=(s?sessionStorage:localStorage).getItem(k);return v?JSON.parse(v):(mem[k]||null)}catch(e){return mem[k]||null}}
+function set(k,v,s){try{(s?sessionStorage:localStorage).setItem(k,JSON.stringify(v))}catch(e){mem[k]=v}}
+function t(k){return (T[lang]&&T[lang][k])||T.en[k]||k}
+function esc(s){return s.replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]})}
+// language
+var saved=get('sg_lang');lang=T[saved]?saved:(T[(navigator.language||'en').slice(0,2)]?(navigator.language||'en').slice(0,2):'en');
+function apply(){document.documentElement.lang=lang;$('lang').value=lang;
+ document.querySelectorAll('[data-t]').forEach(function(e){e.textContent=t(e.getAttribute('data-t'))});
+ var h=$('h1');h.innerHTML=h.textContent.split(' ').map(function(w,i){return '<span class="w" style="--i:'+i+'">'+esc(w)+'</span>'}).join(' ');
+ $('lerr').textContent=lastErr?t(lastErr):'';renderPlans();renderTeam();renderHome();if(lastRes)renderRes();}
+$('lang').onchange=function(){lang=this.value;set('sg_lang',lang);apply()};
+$('th').onclick=function(){var r=document.documentElement,d=getComputedStyle(r).getPropertyValue('--bg').trim()==='#000';r.setAttribute('data-theme',d?'light':'dark')};
+// auth
+function user(){return get('sg_session',1)}
+function users(){return get('sg_users')||{}}
+async function hs(p,s){var b=await crypto.subtle.digest('SHA-256',new TextEncoder().encode(s+p));return Array.from(new Uint8Array(b)).map(function(x){return ('0'+x.toString(16)).slice(-2)}).join('')}
+function fail(k){lastErr=k;$('lerr').textContent=t(k)}
+async function auth(create){lastErr='';$('lerr').textContent='';var em=$('em').value.trim().toLowerCase(),pw=$('pw').value;
+ if(!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(em))return fail('e_mail');
+ var U=users();
+ if(create){if(!($('c1').checked&&$('c2').checked))return fail('e_consent');if(pw.length<8)return fail('e_pw');if(U[em])return fail('e_exist');
+  var salt=Array.from(crypto.getRandomValues(new Uint8Array(12))).map(function(x){return ('0'+x.toString(16)).slice(-2)}).join('');
+  U[em]={salt:salt,hash:await hs(pw,salt),plan:null};set('sg_users',U)}
+ else{if(!U[em]||U[em].hash!==await hs(pw,U[em].salt))return fail('e_cred')}
+ set('sg_session',em,1);$('pw').value='';location.hash='#/app';route()}
+$('f').onsubmit=function(e){e.preventDefault();auth(false)};
+$('su').onclick=function(){auth(true)};
+$('out').onclick=function(){try{sessionStorage.removeItem('sg_session')}catch(e){}delete mem.sg_session;route()};
+// plans
+var G='__guest__';
+var X={
+en:{guest:"Continue as guest",guest_note:"Guest mode: your work stays only in this browser tab and is lost when you close it. Create an account to keep a saved workspace on this device.",needlogin:"Log in to choose",tab1:"Overview",tab2:"Data",tab3:"Skills",tab4:"Gap",tab5:"Roles",tab6:"Review"},
+hi:{guest:"अतिथि के रूप में जारी रखें",guest_note:"अतिथि मोड: आपका काम केवल इसी ब्राउज़र टैब में रहता है और बंद करने पर मिट जाता है। इस डिवाइस पर सहेजा हुआ वर्कस्पेस रखने के लिए खाता बनाएं।",needlogin:"चुनने के लिए लॉग इन करें",tab1:"अवलोकन",tab2:"डेटा",tab3:"कौशल",tab4:"अंतर",tab5:"भूमिकाएँ",tab6:"समीक्षा"},
+es:{guest:"Continuar como invitado",guest_note:"Modo invitado: tu trabajo solo permanece en esta pestaña y se pierde al cerrarla. Crea una cuenta para conservar un espacio de trabajo en este dispositivo.",needlogin:"Inicia sesión para elegir",tab1:"Resumen",tab2:"Datos",tab3:"Habilidades",tab4:"Brecha",tab5:"Roles",tab6:"Revisión"},
+fr:{guest:"Continuer en invité",guest_note:"Mode invité : votre travail reste uniquement dans cet onglet et disparaît à sa fermeture. Créez un compte pour conserver un espace de travail sur cet appareil.",needlogin:"Connectez-vous pour choisir",tab1:"Aperçu",tab2:"Données",tab3:"Compétences",tab4:"Écart",tab5:"Rôles",tab6:"Revue"},
+de:{guest:"Als Gast fortfahren",guest_note:"Gastmodus: Ihre Arbeit bleibt nur in diesem Browser-Tab und geht beim Schließen verloren. Erstellen Sie ein Konto, um einen Arbeitsbereich auf diesem Gerät zu speichern.",needlogin:"Zum Wählen anmelden",tab1:"Übersicht",tab2:"Daten",tab3:"Fähigkeiten",tab4:"Lücke",tab5:"Rollen",tab6:"Prüfung"}};
+var X2={
+en:{cb_text:"We store only what the site needs to work: your language, your login session and your workspace. With your permission we also load fonts from Google Fonts, which sends your IP address to Google. No analytics, no advertising.",cb_acc:"Allow Google Fonts",cb_rej:"Essential only",f_cookie:"Cookie Policy",f_refund:"Refund Policy",f_contact:"Contact & business details",f_data:"Data & deletion",f_cset:"Cookie settings",c_age:"I am 18 or older.",c_terms:"I agree to the Terms and the Privacy Policy.",e_consent:"Please tick both boxes to create an account.",skip:"Skip to content"},
+hi:{cb_text:"हम केवल वही सहेजते हैं जो साइट चलाने के लिए ज़रूरी है: आपकी भाषा, लॉगिन सत्र और आपका वर्कस्पेस। आपकी अनुमति से हम Google Fonts से फ़ॉन्ट भी लोड करते हैं, जिससे आपका IP पता Google को जाता है। कोई एनालिटिक्स या विज्ञापन नहीं।",cb_acc:"Google Fonts की अनुमति दें",cb_rej:"केवल ज़रूरी",f_cookie:"कुकी नीति",f_refund:"रिफंड नीति",f_contact:"संपर्क और व्यवसाय विवरण",f_data:"डेटा और हटाना",f_cset:"कुकी सेटिंग",c_age:"मेरी उम्र 18 वर्ष या अधिक है।",c_terms:"मैं शर्तों और गोपनीयता नीति से सहमत हूँ।",e_consent:"खाता बनाने के लिए दोनों बॉक्स चुनें।",skip:"सामग्री पर जाएँ"},
+es:{cb_text:"Solo guardamos lo necesario para que el sitio funcione: tu idioma, tu sesión y tu espacio de trabajo. Con tu permiso también cargamos fuentes de Google Fonts, lo que envía tu dirección IP a Google. Sin analítica ni publicidad.",cb_acc:"Permitir Google Fonts",cb_rej:"Solo esenciales",f_cookie:"Política de cookies",f_refund:"Política de reembolso",f_contact:"Contacto y datos del negocio",f_data:"Datos y eliminación",f_cset:"Ajustes de cookies",c_age:"Tengo 18 años o más.",c_terms:"Acepto los Términos y la Política de privacidad.",e_consent:"Marca ambas casillas para crear una cuenta.",skip:"Saltar al contenido"},
+fr:{cb_text:"Nous ne stockons que le nécessaire au fonctionnement du site : votre langue, votre session et votre espace de travail. Avec votre accord, nous chargeons aussi des polices Google Fonts, ce qui envoie votre adresse IP à Google. Ni analytique ni publicité.",cb_acc:"Autoriser Google Fonts",cb_rej:"Essentiel uniquement",f_cookie:"Politique de cookies",f_refund:"Politique de remboursement",f_contact:"Contact et informations légales",f_data:"Données et suppression",f_cset:"Paramètres des cookies",c_age:"J'ai 18 ans ou plus.",c_terms:"J'accepte les Conditions et la Politique de confidentialité.",e_consent:"Cochez les deux cases pour créer un compte.",skip:"Aller au contenu"},
+de:{cb_text:"Wir speichern nur, was die Seite braucht: Ihre Sprache, Ihre Sitzung und Ihren Arbeitsbereich. Mit Ihrer Erlaubnis laden wir außerdem Schriften von Google Fonts, wodurch Ihre IP-Adresse an Google gesendet wird. Keine Analyse, keine Werbung.",cb_acc:"Google Fonts erlauben",cb_rej:"Nur notwendige",f_cookie:"Cookie-Richtlinie",f_refund:"Erstattungsrichtlinie",f_contact:"Kontakt & Geschäftsangaben",f_data:"Daten & Löschung",f_cset:"Cookie-Einstellungen",c_age:"Ich bin 18 Jahre oder älter.",c_terms:"Ich stimme den Bedingungen und der Datenschutzerklärung zu.",e_consent:"Bitte beide Kästchen ankreuzen, um ein Konto zu erstellen.",skip:"Zum Inhalt springen"}};
+Object.keys(X2).forEach(function(l){Object.assign(X[l],X2[l])});
+var X3={
+en:{m_hint:"Tap a team member to see their details.",m_lead:"Team Leader",m_mem:"Team Member",m_stream:"Stream",m_year:"Academic year",m_email:"Email",m_mob:"Mobile"},
+hi:{m_hint:"विवरण देखने के लिए किसी टीम सदस्य पर टैप करें।",m_lead:"टीम लीडर",m_mem:"टीम सदस्य",m_stream:"शाखा",m_year:"शैक्षणिक वर्ष",m_email:"ईमेल",m_mob:"मोबाइल"},
+es:{m_hint:"Toca a un miembro del equipo para ver sus datos.",m_lead:"Líder del equipo",m_mem:"Miembro del equipo",m_stream:"Especialidad",m_year:"Curso académico",m_email:"Correo",m_mob:"Móvil"},
+fr:{m_hint:"Touchez un membre de l'équipe pour voir ses informations.",m_lead:"Chef d'équipe",m_mem:"Membre de l'équipe",m_stream:"Filière",m_year:"Année universitaire",m_email:"E-mail",m_mob:"Mobile"},
+de:{m_hint:"Tippen Sie auf ein Teammitglied, um Details zu sehen.",m_lead:"Teamleitung",m_mem:"Teammitglied",m_stream:"Studiengang",m_year:"Studienjahr",m_email:"E-Mail",m_mob:"Mobil"}};
+Object.keys(X3).forEach(function(l){Object.assign(X[l],X3[l])});
+var X4={
+en:{tab7:"Trends",s1:"Collect",s2:"Understand",s3:"Forecast",s4:"Compare",s5:"Recommend",demo_h:"What a forecast looks like",demo_c:"Illustrative sample (made-up numbers). Solid line: history. Dashed: fitted trend. Shaded: 80% range. Horizontal line: trained supply. The app draws the same chart from your own data.",mq_p:"Pause animation",mq_r:"Play animation"},
+hi:{tab7:"रुझान",s1:"जमा करें",s2:"समझें",s3:"पूर्वानुमान",s4:"तुलना",s5:"सुझाव",demo_h:"पूर्वानुमान कैसा दिखता है",demo_c:"उदाहरण के लिए बनाए गए आंकड़े (असली डेटा नहीं)। ठोस रेखा: इतिहास। टूटी रेखा: ट्रेंड। छायांकित: 80% सीमा। सपाट रेखा: प्रशिक्षित आपूर्ति। ऐप यही चार्ट आपके अपने डेटा से बनाता है।",mq_p:"एनिमेशन रोकें",mq_r:"एनिमेशन चलाएँ"},
+es:{tab7:"Tendencias",s1:"Recopilar",s2:"Comprender",s3:"Pronosticar",s4:"Comparar",s5:"Recomendar",demo_h:"Cómo se ve un pronóstico",demo_c:"Muestra ilustrativa (números inventados). Línea continua: historial. Discontinua: tendencia. Sombreado: rango del 80 %. Línea horizontal: oferta formada. La app dibuja el mismo gráfico con tus propios datos.",mq_p:"Pausar animación",mq_r:"Reanudar animación"},
+fr:{tab7:"Tendances",s1:"Collecter",s2:"Comprendre",s3:"Prévoir",s4:"Comparer",s5:"Recommander",demo_h:"À quoi ressemble une prévision",demo_c:"Exemple illustratif (chiffres inventés). Trait plein : historique. Pointillé : tendance. Zone grisée : plage à 80 %. Ligne horizontale : offre formée. L'application trace le même graphique avec vos données.",mq_p:"Mettre en pause",mq_r:"Reprendre"},
+de:{tab7:"Trends",s1:"Sammeln",s2:"Verstehen",s3:"Prognostizieren",s4:"Vergleichen",s5:"Empfehlen",demo_h:"So sieht eine Prognose aus",demo_c:"Illustratives Beispiel (erfundene Zahlen). Durchgezogen: Verlauf. Gestrichelt: Trend. Schattiert: 80-%-Bereich. Waagerechte Linie: ausgebildetes Angebot. Die App zeichnet dasselbe Diagramm aus Ihren Daten.",mq_p:"Animation pausieren",mq_r:"Animation fortsetzen"}};
+Object.keys(X4).forEach(function(l){Object.assign(X[l],X4[l])});
+var X5={
+en:{hero_note:"No sign-up needed. Your data stays in your browser.",who_h:"Who it helps",w1:"Students",w1d:"See which skills are growing so you can choose what to learn.",w2:"Employers",w2d:"Compare the demand for a skill with the talent available.",w3:"Training providers",w3d:"Match courses to demand and see where to add seats.",w4:"Policymakers",w4d:"Spot regional gaps and decide where to act first.",s1d:"Bring in job-posting counts and training numbers.",s2d:"Find the skills named in job postings.",s3d:"Project demand 12 months ahead, with a range.",s4d:"Set demand against trained supply to get the gap.",s5d:"Get suggestions a person can accept, change or reject.",mot:"Background animation"},
+hi:{hero_note:"साइन-अप ज़रूरी नहीं। आपका डेटा आपके ब्राउज़र में रहता है।",who_h:"यह किसके काम आता है",w1:"छात्र",w1d:"देखें कौन-से कौशल बढ़ रहे हैं, ताकि सीखने का चुनाव कर सकें।",w2:"नियोक्ता",w2d:"किसी कौशल की मांग की तुलना उपलब्ध प्रतिभा से करें।",w3:"प्रशिक्षण संस्थान",w3d:"कोर्स को मांग से जोड़ें और देखें कहाँ सीटें बढ़ानी हैं।",w4:"नीति निर्माता",w4d:"क्षेत्रीय कमी पहचानें और तय करें पहले कहाँ कदम उठाना है।",s1d:"नौकरी विज्ञापनों की गिनती और प्रशिक्षण के आंकड़े लाएँ।",s2d:"विज्ञापनों में आए कौशल पहचानें।",s3d:"अगले 12 महीनों की मांग का अनुमान, सीमा के साथ।",s4d:"मांग को प्रशिक्षित आपूर्ति से मिलाकर अंतर निकालें।",s5d:"ऐसे सुझाव पाएँ जिन्हें कोई व्यक्ति मान, बदल या ठुकरा सके।",mot:"बैकग्राउंड एनिमेशन"},
+es:{hero_note:"Sin registro. Tus datos se quedan en tu navegador.",who_h:"A quién ayuda",w1:"Estudiantes",w1d:"Ve qué habilidades crecen para elegir qué aprender.",w2:"Empleadores",w2d:"Compara la demanda de una habilidad con el talento disponible.",w3:"Centros de formación",w3d:"Ajusta los cursos a la demanda y ve dónde añadir plazas.",w4:"Responsables políticos",w4d:"Detecta brechas regionales y decide dónde actuar primero.",s1d:"Aporta recuentos de ofertas de empleo y cifras de formación.",s2d:"Encuentra las habilidades citadas en las ofertas.",s3d:"Proyecta la demanda a 12 meses, con un rango.",s4d:"Contrasta la demanda con la oferta formada para obtener la brecha.",s5d:"Recibe sugerencias que una persona puede aceptar, cambiar o rechazar.",mot:"Animación de fondo"},
+fr:{hero_note:"Sans inscription. Vos données restent dans votre navigateur.",who_h:"À qui cela sert",w1:"Étudiants",w1d:"Voyez quelles compétences progressent pour choisir quoi apprendre.",w2:"Employeurs",w2d:"Comparez la demande d'une compétence aux talents disponibles.",w3:"Organismes de formation",w3d:"Alignez les cours sur la demande et voyez où ajouter des places.",w4:"Décideurs publics",w4d:"Repérez les écarts régionaux et décidez où agir en premier.",s1d:"Importez les volumes d'offres d'emploi et les chiffres de formation.",s2d:"Repérez les compétences citées dans les offres.",s3d:"Projetez la demande à 12 mois, avec une plage.",s4d:"Comparez la demande à l'offre formée pour obtenir l'écart.",s5d:"Obtenez des suggestions qu'une personne peut accepter, modifier ou rejeter.",mot:"Animation d'arrière-plan"},
+de:{hero_note:"Keine Anmeldung nötig. Ihre Daten bleiben in Ihrem Browser.",who_h:"Wem es hilft",w1:"Studierende",w1d:"Sehen Sie, welche Fähigkeiten wachsen, und wählen Sie, was Sie lernen.",w2:"Arbeitgeber",w2d:"Vergleichen Sie die Nachfrage nach einer Fähigkeit mit verfügbaren Talenten.",w3:"Bildungsanbieter",w3d:"Richten Sie Kurse an der Nachfrage aus und sehen Sie, wo Plätze fehlen.",w4:"Politik und Verwaltung",w4d:"Erkennen Sie regionale Lücken und entscheiden Sie, wo zuerst gehandelt wird.",s1d:"Übernehmen Sie Stellenanzeigen-Zahlen und Ausbildungszahlen.",s2d:"Finden Sie die in Anzeigen genannten Fähigkeiten.",s3d:"Prognostizieren Sie die Nachfrage 12 Monate voraus, mit Bereich.",s4d:"Stellen Sie Nachfrage und ausgebildetes Angebot gegenüber, um die Lücke zu erhalten.",s5d:"Erhalten Sie Vorschläge, die eine Person annehmen, ändern oder ablehnen kann.",mot:"Hintergrundanimation"}};
+Object.keys(X5).forEach(function(l){Object.assign(X[l],X5[l])});
+var X6={
+en:{film:"Old-film theme",kb_t:"Keyboard shortcuts",r_watch:"Watch the story",r0t:"Skill Verse presents",r0s:"A short story of how the engine finds skill gaps",r_fin:"The End",r_prev:"Previous",r_next:"Next",r_close:"Close",r_pause:"Pause",r_play:"Play"},
+hi:{film:"पुरानी फ़िल्म थीम",kb_t:"कीबोर्ड शॉर्टकट",r_watch:"कहानी देखें",r0t:"Skill Verse प्रस्तुत करता है",r0s:"इंजन कौशल की कमी कैसे ढूँढता है, एक छोटी कहानी",r_fin:"समाप्त",r_prev:"पिछला",r_next:"अगला",r_close:"बंद करें",r_pause:"रोकें",r_play:"चलाएँ"},
+es:{film:"Tema de cine antiguo",kb_t:"Atajos de teclado",r_watch:"Ver la historia",r0t:"Skill Verse presenta",r0s:"Una breve historia de cómo el motor encuentra brechas de habilidades",r_fin:"Fin",r_prev:"Anterior",r_next:"Siguiente",r_close:"Cerrar",r_pause:"Pausa",r_play:"Reproducir"},
+fr:{film:"Thème vieux film",kb_t:"Raccourcis clavier",r_watch:"Voir l'histoire",r0t:"Skill Verse présente",r0s:"Une courte histoire de la façon dont le moteur trouve les écarts de compétences",r_fin:"Fin",r_prev:"Précédent",r_next:"Suivant",r_close:"Fermer",r_pause:"Pause",r_play:"Lecture"},
+de:{film:"Stummfilm-Look",kb_t:"Tastenkürzel",r_watch:"Geschichte ansehen",r0t:"Skill Verse präsentiert",r0s:"Eine kurze Geschichte, wie die Engine Fähigkeitslücken findet",r_fin:"Ende",r_prev:"Zurück",r_next:"Weiter",r_close:"Schließen",r_pause:"Pause",r_play:"Abspielen"}};
+Object.keys(X6).forEach(function(l){Object.assign(X[l],X6[l])});
+
+
+
+Object.keys(X).forEach(function(l){Object.assign(T[l],X[l])});
+function isG(){return user()===G}
+function wk(){return 'sg_ws_'+user()}
+var W=null,curTab='ov',rgn='',role='student';
+function loadW(){W=get(wk(),isG())||{src:'',asof:'',raw:'',rows:[],log:[]}}
+function saveW(){if(W)set(wk(),W,isG())}
+function today(){return new Date().toISOString().slice(0,10)}
+function renderPlans(){var u=user(),g=u===G,cur=(!g&&u&&users()[u])?users()[u].plan:null;
+ $('pl').innerHTML=[1,2,3].map(function(i){return '<div class="cell"><h3>'+esc(t('p'+i))+'</h3><p>'+esc(t('p'+i+'d'))+'</p><button class="btn'+(cur===i?'':' alt')+'" data-p="'+i+'"'+(cur===i?' disabled':'')+'>'+esc(t(g?'needlogin':cur===i?'cur':'choose'))+'</button></div>'}).join('');
+ $('pl').querySelectorAll('button').forEach(function(b){b.onclick=function(){if(isG()){location.hash='#/login';return}var U=users(),e=user();if(!e||!U[e])return;U[e].plan=+b.getAttribute('data-p');set('sg_users',U);renderPlans()}})}
+$('gb').onclick=function(){lastErr='';set('sg_session',G,1);location.hash='#/app';route()};
+// engine
+function parse(s){var rows=[],errs=[];s.split('\n').forEach(function(l,k){l=l.trim();if(!l)return;if(k===0&&/^skill/i.test(l))return;var p=l.split(';');
+ var nm=(p[0]||'').trim(),rg=(p[1]||'').trim(),h=(p[2]||'').split(/[,\s]+/).filter(Boolean).map(Number),sp=(p[3]||'').trim(),sn=Number(sp);
+ if(p.length!==4||!nm||!rg||h.length<3||h.some(function(x){return !isFinite(x)||x<0})||sp===''||!isFinite(sn)||sn<0){errs.push('Line '+(k+1)+': expected skill; region; history (3+ numbers); supply');return}
+ rows.push({name:nm,region:rg,h:h,sup:sn})});return {rows:rows,errs:errs}}
+function fit(h){var n=h.length,sx=0,sy=0,sxx=0,sxy=0;h.forEach(function(y,x){sx+=x;sy+=y;sxx+=x*x;sxy+=x*y});var b=(n*sxy-sx*sy)/(n*sxx-sx*sx);return {a:(sy-b*sx)/n,b:b}}
+function mdl(r){var h=r.h,n=h.length,p=fit(h),m=h.reduce(function(a,c){return a+c},0)/n,st=0,sr=0;
+ h.forEach(function(y,x){st+=Math.pow(y-m,2);sr+=Math.pow(y-(p.a+p.b*x),2)});
+ var f=Math.max(0,p.a+p.b*(n+5.5)),se=n>2?Math.sqrt(sr/(n-2)):0,r2=st===0?1:Math.max(0,1-sr/st),g=f-r.sup,q=r.sup>0?g/r.sup:(f>0?1:0),last=h[n-1];
+ return {f:f,lo:Math.max(0,f-1.28*se),hi:f+1.28*se,g:g,r2:r2,s:q>.1?'Shortage':q<-.1?'Surplus':'Balanced',c:(r2>=.8&&n>=6)?'High':(r2>=.5&&n>=5)?'Medium':'Low',gr:last>0?(f/last-1)*100:0,last:last,q:q}}
+function bt(rows){var e=[];rows.forEach(function(r){var n=r.h.length;if(n<6)return;var p=fit(r.h.slice(0,n-3));for(var i=n-3;i<n;i++)if(r.h[i]>0)e.push(Math.abs(Math.max(0,p.a+p.b*i)-r.h[i])/r.h[i])});
+ return e.length?Math.max(0,100-100*e.reduce(function(a,c){return a+c},0)/e.length):null}
+function comp(all){return W.rows.filter(function(r){return all||!rgn||r.region===rgn}).map(function(r){return {r:r,m:mdl(r)}})}
+function fm(x){return (Math.round(x*10)/10).toLocaleString()}
+function sg(x){return (x>0?'+':'')+fm(x)}
+function tbl(h,rs){return '<div class="tw"><table><thead><tr>'+h.map(function(x){return '<th>'+x+'</th>'}).join('')+'</tr></thead><tbody>'+rs.map(function(r){return '<tr>'+r.map(function(c){return '<td>'+c+'</td>'}).join('')+'</tr>'}).join('')+'</tbody></table></div>'}
+function stt(s){return '<span class="tag '+s+'">'+esc(t(s))+'</span>'}
+function empty(){return '<div class="box" style="max-width:none"><h3>Start here</h3><ol class="steps"><li>Add data: your own, or the illustrative sample.</li><li>Open Gap and Trends to see forecasts and gaps.</li><li>Use Review to accept, change or reject recommendations.</li></ol><div class="row"><button class="btn" data-act="sample">Try the illustrative sample</button><button class="btn alt" data-go="da">Add my own data</button></div></div>'}
+function bindGo(el){var me=el.id.replace('tab-','');el.querySelectorAll('[data-go]').forEach(function(b){b.onclick=function(){showTab(b.getAttribute('data-go'))}});el.querySelectorAll('[data-act="sample"]').forEach(function(b){b.onclick=function(){showTab('da');$('smp').click();showTab(me)}})}
+function key(r){return r.name+'|'+r.region+'|'+W.asof}
+function decs(){var m={};W.log.forEach(function(e){m[e.key]=e});return Object.keys(m).map(function(k){return m[k]})}
+function copy(txt,b){var o=b.textContent;function ok(){b.textContent='Copied'}function no(){b.textContent='Copy not available'}try{navigator.clipboard.writeText(txt).then(ok,no)}catch(e){no()}setTimeout(function(){b.textContent=o},1800)}
+function kpi(l,v){return '<div class="cell"><div class="mono note" style="margin:0">'+l+'</div><div class="big">'+v+'</div></div>'}
+// overview
+function rOv(){var el=$('tab-ov');if(!W.rows.length){el.innerHTML=empty();bindGo(el);return}
+ var C=comp(true),c={Shortage:0,Balanced:0,Surplus:0};C.forEach(function(x){c[x.m.s]++});
+ var acc=bt(W.rows),age=Math.max(0,Math.round((Date.now()-new Date(W.asof).getTime())/864e5)),D=decs(),a=D.filter(function(d){return d.decision==='Accept'}).length,mo=D.filter(function(d){return d.decision==='Modify'}).length,rj=D.length-a-mo;
+ var sh=C.filter(function(x){return x.m.s==='Shortage'}).sort(function(x,y){return y.m.g-x.m.g});
+ var h='<p class="lead">'+esc(W.src)+' · data as of '+esc(W.asof)+'</p><div class="grid">'+kpi('Records',C.length)+kpi('Shortages',c.Shortage)+kpi('Balanced',c.Balanced)+kpi('Surplus',c.Surplus)+kpi('Forecast accuracy',acc===null?'n/a':Math.round(acc)+'%')+kpi('Data age',age+' d')+'</div>';
+ h+='<div id="dn" class="box" style="max-width:none"></div>';h+='<p class="note">Forecast accuracy: backtest on each series\' last 3 points (needs 6+ points). Data age: days since the as-of date.</p>';
+ h+='<h3 style="margin-top:28px">Alerts</h3>'+(sh.length?tbl(['Skill','Region','Gap','Confidence'],sh.slice(0,5).map(function(x){return [esc(x.r.name),esc(x.r.region),sg(x.m.g),x.m.c]})):'<p class="note">No shortages flagged.</p>');
+ h+='<h3 style="margin-top:28px">Success metrics</h3>'+tbl(['Metric','Value'],[['Forecast accuracy (predicted vs actual)',acc===null?'Needs 6+ history points':Math.round(acc)+'%'],['Skill-extraction F1','Needs a labelled sample, not computed'],['Gap detection vs expert review',D.length?Math.round(100*a/D.length)+'% of reviewed flags accepted':'No reviews yet'],['Recommendation review (accept / modify / reject)',D.length?a+' / '+mo+' / '+rj:'No reviews yet'],['Data freshness',age+' days since as-of date']]);
+ h+='<div class="row"><button class="btn alt" id="rep">Copy report</button></div><p class="note mono">Pipeline: Ingest → Clean → Extract skills → Trends → Forecast → Gap → Dashboard (Data, Skills, Gap, Roles, Review tabs)</p>';
+ h+=GLOSS;el.innerHTML=h;donutInto(c);countUp(el);$('rep').onclick=function(){copy('SkillGap report\nSource: '+W.src+' | Data as of: '+W.asof+' | Records: '+C.length+'\nForecast accuracy (backtest): '+(acc===null?'n/a':Math.round(acc)+'%')+'\nShortages: '+(sh.length?sh.map(function(x){return x.r.name+' ('+x.r.region+') gap '+sg(x.m.g)+', confidence '+x.m.c}).join('; '):'none')+'\nHuman review: '+a+' accepted, '+mo+' modified, '+rj+' rejected\nNote: statistics support decisions; a person must review them.',$('rep'))}}
+// data
+function dinfo(){var el=$('dinfo');if(!W||!W.rows.length){el.innerHTML='';return}var rs={};W.rows.forEach(function(r){rs[r.region]=(rs[r.region]||0)+1});
+ el.innerHTML='<p class="lead">Loaded '+W.rows.length+' records from '+esc(W.src)+', as of '+esc(W.asof)+'.</p>'+tbl(['Region','Records'],Object.keys(rs).map(function(k){return [esc(k),rs[k]]}))+dataChecks()}
+function fillData(){if(!W)return;$('inp').value=W.raw||'';$('src').value=W.src||'';$('asof').value=W.asof||today();dinfo()}
+$('load').onclick=function(){if(!W)return;var p=parse($('inp').value);$('err').textContent=p.errs.join(' · ');
+ if(!p.rows.length){if(!p.errs.length)$('err').textContent='Enter at least one line.';return}
+ W.rows=p.rows;W.raw=$('inp').value;W.src=$('src').value.trim()||'Unnamed source';W.asof=$('asof').value||today();rgn='';saveW();dinfo()};
+$('upb').onclick=function(){$('file').click()};
+$('file').onchange=function(){var f=this.files[0];if(!f)return;if(f.size>2e6){$('err').textContent='File too large (max 2 MB).';return}var fr=new FileReader();fr.onload=function(){$('inp').value=String(fr.result);if(!$('src').value)$('src').value=f.name;$('load').click()};fr.readAsText(f)};
+$('smp').onclick=function(){$('src').value='Illustrative sample (made-up numbers, not real data)';$('asof').value=today();
+ $('inp').value='Data Analytics; Jaipur; 80 92 101 115 126 140 151 163; 120\nData Analytics; Kota; 22 24 27 29 33 35 38 41; 40\nAI/ML; Jaipur; 40 52 63 78 90 105 118 132; 80\nAI/ML; Jodhpur; 12 14 15 18 19 22 24 27; 30\nBasic IT; Jaipur; 150 148 152 149 151 150 152 150; 200\nBasic IT; Kota; 60 61 59 62 60 61 60 62; 80\nCloud; Jaipur; 55 58 64 66 73 77 84 88; 85\nCybersecurity; Jodhpur; 18 20 23 24 28 31 33 37; 25\nCybersecurity; Kota; 9 10 10 12 12 14 15 16; 15\nWeb Development; Jaipur; 120 125 123 130 128 132 131 135; 150';$('load').click()};
+$('clr').onclick=function(){if(!W)return;W.rows=[];W.raw='';W.src='';saveW();$('inp').value='';$('src').value='';$('err').textContent='';dinfo()};
+// skills
+var TX={"Data Analytics":["data analysis","data analytics","power bi","tableau","excel"],"AI/ML":["machine learning","deep learning","tensorflow","pytorch","nlp","generative ai"],"Cloud":["aws","azure","gcp","cloud"],"Cybersecurity":["cybersecurity","cyber security","penetration testing","soc analyst","information security"],"Web Development":["react","javascript","html","css","node.js","web development"],"Python":["python"],"SQL/Databases":["sql","mysql","postgresql","mongodb"],"DevOps":["docker","kubernetes","ci/cd","devops"],"Mobile Development":["android","flutter","kotlin","ios development"],"Basic IT":["it support","help desk","helpdesk","hardware","networking"],"UI/UX Design":["figma","ui/ux"],"Project Management":["scrum","agile","project management"]};
+var xl='';
+$('ext').onclick=function(){var ps=$('posts').value.split(/\n\s*\n|^\s*-{3,}\s*$/m).map(function(s){return s.trim().toLowerCase()}).filter(Boolean);
+ if(!ps.length){$('xout').innerHTML='<p class="err">Paste at least one posting.</p>';xl='';return}
+ var R=Object.keys(TX).map(function(k){var rx=TX[k].map(function(w){return new RegExp('\\b'+w.replace(/[.*+?^${}()|[\]\\\/]/g,'\\$&')+'\\b')});return [k,ps.filter(function(p){return rx.some(function(r){return r.test(p)})}).length]}).filter(function(x){return x[1]>0}).sort(function(a,b){return b[1]-a[1]});
+ xl=R.map(function(x){return x[0]+'; '+x[1]}).join('\n');
+ $('xout').innerHTML='<p class="lead">'+ps.length+' posting(s) read.</p>'+(R.length?tbl(['Skill','Postings','Share'],R.map(function(x){return [esc(x[0]),x[1],Math.round(100*x[1]/ps.length)+'%']})):'<p class="note">No taxonomy skills found.</p>')};
+$('xcp').onclick=function(){if(xl)copy(xl,$('xcp'))};
+// gap
+var gq='',gs='gap',tsr=0;
+function rn(v){return Math.round(v*10)/10}
+function lineChart(r,o){o=o||{};var h=r.h,n=h.length,p=fit(h),m=mdl(r),sd=(m.hi-m.f)/1.28,N=n+12,Wd=640,Ht=270,L=46,R=14,T=14,B=34,sup=o.sup!==undefined?o.sup:r.sup,k=1+(o.shift||0)/100,fc=[],i;
+ for(i=n;i<N;i++)fc.push(Math.max(0,(p.a+p.b*i)*k));
+ var mx=(Math.max.apply(null,h.concat(fc.map(function(v){return v+1.28*sd*k}),[sup]))||1)*1.08;
+ function X(i){return L+i*(Wd-L-R)/(N-1)}function Y(v){return T+(1-v/mx)*(Ht-T-B)}
+ var s='<svg viewBox="0 0 '+Wd+' '+Ht+'" width="100%" role="img" aria-label="'+esc(r.name+' in '+r.region)+': history, trend, 12-month forecast with range, and supply">';
+ for(i=0;i<=4;i++){var v=mx*i/4,y=Y(v);s+='<line class="sl" x1="'+L+'" x2="'+(Wd-R)+'" y1="'+y+'" y2="'+y+'"/><text x="'+(L-6)+'" y="'+(y+4)+'" text-anchor="end">'+Math.round(v)+'</text>'}
+ var up=[],lo=[];fc.forEach(function(v,q){var x=X(n+q);up.push(x+','+Y(v+1.28*sd*k));lo.unshift(x+','+Y(Math.max(0,v-1.28*sd*k)))});
+ s+='<polygon class="sf" style="opacity:.14" points="'+up.concat(lo).join(' ')+'"/>';
+ s+='<line class="sm2" stroke-dasharray="4 4" x1="'+X(n-.5)+'" x2="'+X(n-.5)+'" y1="'+T+'" y2="'+(Ht-B)+'"/><text x="'+(X(n-.5)+6)+'" y="'+(T+10)+'">forecast →</text>';
+ s+='<path class="sn sm2" stroke-dasharray="6 5" d="M'+X(0)+' '+Y(p.a)+'L'+X(n-1)+' '+Y(p.a+p.b*(n-1))+'L'+X(n)+' '+Y(fc[0])+'L'+X(N-1)+' '+Y(fc[fc.length-1])+'"/>';
+ s+='<line class="ss" stroke-width="2" x1="'+L+'" x2="'+(Wd-R)+'" y1="'+Y(sup)+'" y2="'+Y(sup)+'"/><text x="'+(L+6)+'" y="'+(Y(sup)-6)+'">supply '+fm(sup)+'</text>';
+ s+='<path class="sn ss'+(o.noanim?'':' dr')+'" pathLength="1" stroke-width="2.5" d="M'+h.map(function(v,q){return X(q)+' '+Y(v)}).join('L')+'"/>';
+ h.forEach(function(v,q){s+='<circle class="sf" cx="'+X(q)+'" cy="'+Y(v)+'" r="3"/>'});
+ s+='<line class="ss" x1="'+L+'" x2="'+(Wd-R)+'" y1="'+(Ht-B)+'" y2="'+(Ht-B)+'"/><text x="'+X(0)+'" y="'+(Ht-12)+'">month 1</text><text x="'+X(n-1)+'" y="'+(Ht-12)+'" text-anchor="middle">month '+n+'</text><text x="'+X(N-1)+'" y="'+(Ht-12)+'" text-anchor="end">+12</text></svg>';return s}
+function heatmap(){var sk=[],rg=[],cell={};W.rows.forEach(function(r){if(sk.indexOf(r.name)<0)sk.push(r.name);if(rg.indexOf(r.region)<0)rg.push(r.region);cell[r.name+'|'+r.region]=mdl(r)});
+ var L=170,cw=Math.max(78,Math.min(120,Math.floor(450/rg.length))),Wd=L+cw*rg.length+6,Hd=36+sk.length*36;
+ var s='<div class="tw"><svg viewBox="0 0 '+Wd+' '+Hd+'" width="100%" style="min-width:'+Math.min(Wd,520)+'px" role="img" aria-label="Heatmap of forecast gap as a percentage of supply, by skill and region">';
+ rg.forEach(function(g,j){s+='<text x="'+(L+j*cw+cw/2-2)+'" y="20" text-anchor="middle">'+esc(g.slice(0,14))+'</text>'});
+ sk.forEach(function(k,i){var y=32+i*36;s+='<text x="0" y="'+(y+21)+'">'+esc(k.slice(0,24))+'</text>';
+  rg.forEach(function(g,j){var m=cell[k+'|'+g],x=L+j*cw;if(!m){s+='<text x="'+(x+cw/2-2)+'" y="'+(y+21)+'" text-anchor="middle">–</text>';return}
+   var op=.06+.84*Math.min(1,Math.abs(m.q)/.6),sym=m.s==='Shortage'?'▲':m.s==='Surplus'?'▽':'●';
+   s+='<rect class="sf" x="'+x+'" y="'+y+'" width="'+(cw-4)+'" height="30" style="opacity:'+op.toFixed(2)+'"/>'+(m.s==='Surplus'?'<rect class="sn ss" stroke-dasharray="3 3" x="'+x+'" y="'+y+'" width="'+(cw-4)+'" height="30"/>':'')+'<text class="'+(op>.5?'tb':'ti')+'" x="'+(x+cw/2-2)+'" y="'+(y+20)+'" text-anchor="middle">'+sym+' '+sg(m.q*100)+'%</text>'})});
+ return s+'</svg></div>'}
+function dvChart(C){var S=C.slice().sort(function(a,b){return b.m.q-a.m.q}).slice(0,16),mq=Math.max(.2,Math.min(3,Math.max.apply(null,S.map(function(x){return Math.abs(x.m.q)})))),Wd=640,L=240,hw=(Wd-L-80)/2,x0=L+hw,H=S.length*26+34;
+ var s='<div class="tw"><svg viewBox="0 0 '+Wd+' '+H+'" width="100%" role="img" aria-label="Ranking of forecast gap as a percentage of supply, shortages right, surpluses left"><defs><pattern id="ht" width="6" height="6" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><line x1="0" y1="0" x2="0" y2="6" class="ss" stroke-width="2"/></pattern></defs>';
+ S.forEach(function(x,i){var y=i*26+6,q=Math.max(-mq,Math.min(mq,x.m.q)),w=Math.abs(q)/mq*hw,pos=q>=0;
+  s+='<text x="0" y="'+(y+14)+'">'+esc((x.r.name+' · '+x.r.region).slice(0,28))+'</text><rect class="'+(pos?'sf':'sn ss')+'"'+(pos?'':' style="fill:url(#ht)"')+' x="'+(pos?x0:x0-w)+'" y="'+y+'" width="'+w+'" height="16"/><text x="'+(pos?x0+w+5:x0-w-5)+'" y="'+(y+13)+'" text-anchor="'+(pos?'start':'end')+'">'+sg(x.m.q*100)+'%</text>'});
+ return s+'<line class="ss" x1="'+x0+'" x2="'+x0+'" y1="0" y2="'+(H-26)+'"/><text x="'+x0+'" y="'+(H-6)+'" text-anchor="middle">◂ surplus | shortage ▸</text></svg></div>'}
+function barsChart(C){var S=C.slice(0,14),mx=Math.max.apply(null,S.map(function(x){return Math.max(x.m.hi,x.r.sup)}))||1,Wd=640,L=190,H=S.length*44+34,sc=(Wd-L-20)/mx;
+ var s='<div class="tw"><svg viewBox="0 0 '+Wd+' '+H+'" width="100%" role="img" aria-label="Forecast demand, 80 percent range and supply per series">';
+ S.forEach(function(x,i){var y=i*44+6;s+='<text x="0" y="'+(y+14)+'">'+esc((x.r.name+' · '+x.r.region).slice(0,26))+'</text><rect class="sf" x="'+L+'" y="'+y+'" width="'+x.m.f*sc+'" height="10"/><rect class="sn ss" x="'+L+'" y="'+(y+13)+'" width="'+x.r.sup*sc+'" height="10"/><path class="sn sm2" d="M'+(L+x.m.lo*sc)+' '+(y+32)+'H'+(L+x.m.hi*sc)+'M'+(L+x.m.lo*sc)+' '+(y+28)+'v8M'+(L+x.m.hi*sc)+' '+(y+28)+'v8"/>'});
+ return s+'<text x="'+L+'" y="'+(H-4)+'">■ forecast   □ supply   ⊢⊣ 80% range</text></svg></div>'}
+function donutInto(c){var el=$('dn');if(!el)return;var tot=c.Shortage+c.Balanced+c.Surplus,R=42,Cc=2*Math.PI*R,cum=0,cl={Shortage:'ss',Balanced:'sm2',Surplus:'sl'},bg={Shortage:'var(--ink)',Balanced:'var(--mute)',Surplus:'var(--line)'};
+ var s='<h3 style="margin-top:0">Status split</h3><div class="row" style="align-items:center;margin:0;gap:28px"><svg class="pop" viewBox="0 0 120 120" width="160" height="160" role="img" aria-label="Status split: '+c.Shortage+' shortage, '+c.Balanced+' balanced, '+c.Surplus+' surplus"><g transform="rotate(-90 60 60)">';
+ ['Shortage','Balanced','Surplus'].forEach(function(k){var len=c[k]/tot*Cc;if(len>0)s+='<circle class="sn '+cl[k]+'" cx="60" cy="60" r="'+R+'" stroke-width="18" stroke-dasharray="'+Math.max(0,len-1.5)+' '+Cc+'" stroke-dashoffset="'+(-cum)+'"/>';cum+=len});
+ s+='</g><text class="ti" x="60" y="66" text-anchor="middle" style="font-size:20px">'+tot+'</text></svg><ul style="list-style:none;margin:0;padding:0">'+['Shortage','Balanced','Surplus'].map(function(k){return '<li style="margin:6px 0"><span style="display:inline-block;width:14px;height:14px;vertical-align:-2px;margin-right:8px;border:1px solid var(--ink);background:'+bg[k]+'"></span>'+esc(t(k))+' · '+c[k]+' ('+Math.round(100*c[k]/tot)+'%)</li>'}).join('')+'</ul></div>';el.innerHTML=s}
+function countUp(el){if(window.matchMedia&&matchMedia('(prefers-reduced-motion:reduce)').matches)return;el.querySelectorAll('.big').forEach(function(b){var v=b.textContent.trim();if(!/^\d+$/.test(v))return;var n=+v,t0=null;b.textContent='0';function st(ts){if(t0===null)t0=ts;var p=Math.min(1,(ts-t0)/800);b.textContent=Math.round(n*(1-Math.pow(1-p,3)));if(p<1)requestAnimationFrame(st)}requestAnimationFrame(st)})}
+function rGp(){var el=$('tab-gp');if(!W.rows.length){el.innerHTML=empty();bindGo(el);return}
+ var rgs=[];W.rows.forEach(function(r){if(rgs.indexOf(r.region)<0)rgs.push(r.region)});
+ el.innerHTML='<div class="row" style="margin-top:0"><div><label for="rg">Region</label><select id="rg"><option value="">All regions</option>'+rgs.map(function(x){return '<option'+(x===rgn?' selected':'')+'>'+esc(x)+'</option>'}).join('')+'</select></div><div style="flex:1;min-width:160px"><label for="gqi">Search skill</label><input id="gqi" type="search" value="'+esc(gq)+'"></div><div><label for="gso">Sort by</label><select id="gso"><option value="gap">Largest gap</option><option value="gr">Fastest growth</option><option value="name">Name</option></select></div></div><div id="gres"></div>';
+ $('gso').value=gs;$('rg').onchange=function(){rgn=this.value;drawGp()};$('gqi').oninput=function(){gq=this.value.trim().toLowerCase();drawGp()};$('gso').onchange=function(){gs=this.value;drawGp()};drawGp()}
+function drawGp(){var C=W.rows.map(function(r,i){return {r:r,m:mdl(r),i:i}}).filter(function(x){return (!rgn||x.r.region===rgn)&&(!gq||x.r.name.toLowerCase().indexOf(gq)>=0)});
+ C.sort(gs==='name'?function(a,b){return a.r.name.localeCompare(b.r.name)}:gs==='gr'?function(a,b){return b.m.gr-a.m.gr}:function(a,b){return b.m.g-a.m.g});
+ if(!C.length){$('gres').innerHTML='<p class="note">No matching rows.</p>';return}
+ $('gres').innerHTML=tbl(['Skill','Region','Latest','Forecast','80% range','Supply','Gap','Status','Confidence','Chart'],C.map(function(x){return [esc(x.r.name),esc(x.r.region),fm(x.m.last),fm(x.m.f),fm(x.m.lo)+'–'+fm(x.m.hi),fm(x.r.sup),sg(x.m.g),stt(x.m.s),x.m.c+' (R² '+x.m.r2.toFixed(2)+')','<button type="button" class="sm" data-i="'+x.i+'">View</button>']}))+'<div class="row"><button class="btn alt" id="gcsv">Copy as CSV</button></div>'+barsChart(C);
+ $('gres').querySelectorAll('[data-i]').forEach(function(b){b.onclick=function(){tsr=+b.getAttribute('data-i');showTab('tr')}});
+ $('gcsv').onclick=function(){var q=function(v){v=String(v);if(/^[=+\-@]/.test(v))v="'"+v;return '"'+v.replace(/"/g,'""')+'"'};copy('skill,region,latest,forecast,low,high,supply,gap,status,confidence\n'+C.map(function(x){return [q(x.r.name),q(x.r.region),x.m.last,rn(x.m.f),rn(x.m.lo),rn(x.m.hi),x.r.sup,rn(x.m.g),x.m.s,x.m.c].join(',')}).join('\n'),$('gcsv'))}}
+// trends
+function rTr(){var el=$('tab-tr');if(!W.rows.length){el.innerHTML=empty();bindGo(el);return}
+ if(tsr>=W.rows.length)tsr=0;var r=W.rows[tsr],m=mdl(r),mxE=Math.ceil(Math.max(10,Math.abs(m.g)*2,m.f*.5));
+ el.innerHTML='<label for="ts">Series</label><select id="ts">'+W.rows.map(function(q,i){return '<option value="'+i+'"'+(i===tsr?' selected':'')+'>'+esc(q.name+' · '+q.region)+'</option>'}).join('')+'</select>'
+ +'<div class="grid" style="margin-top:18px">'+kpi('Forecast (12-mo avg)',fm(m.f))+kpi('80% range',fm(m.lo)+'–'+fm(m.hi))+kpi('Forecast vs latest',sg(m.gr)+'%')+kpi('Confidence',m.c+' · R² '+m.r2.toFixed(2))+'</div>'
+ +'<div class="tw" id="tcc" style="margin-top:18px">'+lineChart(r)+'</div><p class="note">Solid line: history. Dashed: fitted trend. Shaded: 80% range. Horizontal line: supply.</p>'
+ +'<h3 style="margin-top:30px">Scenario planner</h3><p class="note">Try a what-if on this series. A planning aid, not a prediction.</p><label for="sx">Extra trained supply per month: <b id="sxv">0</b></label><input id="sx" type="range" min="0" max="'+mxE+'" step="'+Math.max(1,Math.round(mxE/100))+'" value="0"><label for="sy">Demand shift: <b id="syv">0%</b></label><input id="sy" type="range" min="-30" max="30" step="1" value="0"><p id="so" aria-live="polite"></p>'
+ +'<h3 style="margin-top:34px">Gap heatmap</h3><p class="note">Gap as % of supply. ▲ shortage, ● balanced, ▽ surplus (dashed outline). Darker means a bigger gap.</p>'+heatmap()
+ +'<h3 style="margin-top:34px">Gap ranking</h3><p class="note">Hatched bars to the left are surpluses, solid bars to the right are shortages.</p>'+dvChart(comp(true))+'<h3 style="margin-top:34px">Compare two regions</h3><div id="cmp"></div>';
+ function scn(first){var x=+$('sx').value,y=+$('sy').value,F=m.f*(1+y/100),S=r.sup+x,g=F-S,q=S>0?g/S:(F>0?1:0),st=q>.1?'Shortage':q<-.1?'Surplus':'Balanced',need=Math.max(0,F/1.1-S);
+  $('sxv').textContent=x;$('syv').textContent=(y>0?'+':'')+y+'%';
+  $('so').innerHTML='Forecast '+fm(F)+' vs supply '+fm(S)+': gap '+sg(g)+' ('+stt(st)+'). Extra supply still needed to avoid a shortage: <b>'+fm(need)+'</b> per month.';
+  if(!first)$('tcc').innerHTML=lineChart(r,{sup:S,shift:y,noanim:true})}
+ $('ts').onchange=function(){tsr=+this.value;rTr()};$('sx').oninput=function(){scn()};$('sy').oninput=function(){scn()};scn(true);cmpDraw()}
+// roles
+function rRo(){var el=$('tab-ro');if(!W.rows.length){el.innerHTML=empty();bindGo(el);return}
+ var C=comp(true),o=[['student','Student'],['employer','Employer'],['institute','Training institute'],['policy','Policymaker']];
+ var h='<label for="role">View as</label><select id="role">'+o.map(function(x){return '<option value="'+x[0]+'"'+(x[0]===role?' selected':'')+'>'+x[1]+'</option>'}).join('')+'</select>';
+ if(role==='student'){h+='<p class="lead">Skills with the fastest forecast demand growth. Prefer rising demand with a Shortage status and decent confidence.</p>'+tbl(['Skill','Region','Forecast vs latest','Status','Confidence'],C.slice().sort(function(a,b){return b.m.gr-a.m.gr}).slice(0,8).map(function(x){return [esc(x.r.name),esc(x.r.region),sg(x.m.gr)+'%',stt(x.m.s),x.m.c]}))+'<div id="cpf"></div>'}
+ else if(role==='employer'){var f=function(s,rev){return C.filter(function(x){return x.m.s===s}).sort(function(a,b){return rev?a.m.q-b.m.q:b.m.q-a.m.q})};
+  h+='<h3>Hard to hire (shortage)</h3>'+tbl(['Skill','Region','Gap','Confidence'],f('Shortage').map(function(x){return [esc(x.r.name),esc(x.r.region),sg(x.m.g),x.m.c]}))+'<h3>Talent available (surplus)</h3>'+tbl(['Skill','Region','Gap','Confidence'],f('Surplus',1).map(function(x){return [esc(x.r.name),esc(x.r.region),sg(x.m.g),x.m.c]}))}
+ else if(role==='institute'){var act={Shortage:'Expand or add a course',Balanced:'Maintain',Surplus:'Review intake / update curriculum'};
+  h+='<p class="lead">Course priorities from the gap, largest first.</p>'+tbl(['Skill','Region','Gap','Suggested action'],C.slice().sort(function(a,b){return b.m.g-a.m.g}).map(function(x){return [esc(x.r.name),esc(x.r.region),sg(x.m.g),act[x.m.s]]}))}
+ else{var g={};C.forEach(function(x){var k=x.r.region;g[k]=g[k]||{n:0,f:0,s:0,sh:0};g[k].n++;g[k].f+=x.m.f;g[k].s+=x.r.sup;if(x.m.s==='Shortage')g[k].sh++});
+  h+='<p class="lead">Regional gaps, largest net gap first.</p>'+tbl(['Region','Skills tracked','Forecast demand','Supply','Net gap','Shortages'],Object.keys(g).sort(function(a,b){return (g[b].f-g[b].s)-(g[a].f-g[a].s)}).map(function(k){var v=g[k];return [esc(k),v.n,fm(v.f),fm(v.s),sg(v.f-v.s),v.sh]}))}
+ el.innerHTML=h;$('role').onchange=function(){role=this.value;rRo()};if(role==='student')careerFinder()}
+// review
+function rRv(){var el=$('tab-rv');if(!W.rows.length){el.innerHTML=empty();bindGo(el);return}
+ var done={};decs().forEach(function(d){done[d.key]=1});
+ var P=comp(true).filter(function(x){return x.m.s==='Shortage'&&!done[key(x.r)]}).sort(function(a,b){return b.m.g-a.m.g});
+ var h='<p class="lead">The tool flags gaps; a person decides. Accept, modify or reject each recommendation. Modify and reject need a reason, and every decision is logged.</p>';
+ h+=P.length?P.map(function(x,i){return '<div class="box" style="max-width:none"><h3>'+esc(x.r.name)+' · '+esc(x.r.region)+'</h3><p class="note">Forecast '+fm(x.m.f)+' vs supply '+fm(x.r.sup)+' (gap '+sg(x.m.g)+', confidence '+x.m.c+'). Recommendation: expand training output by about '+fm(x.m.g)+' per month.</p><label for="rs'+i+'">Reason</label><input id="rs'+i+'"><div class="row"><button class="btn" data-i="'+i+'" data-d="Accept">Accept</button><button class="btn alt" data-i="'+i+'" data-d="Modify">Modify</button><button class="btn alt" data-i="'+i+'" data-d="Reject">Reject</button></div><div class="err" id="re'+i+'"></div></div>'}).join(''):'<p class="note">No pending shortage recommendations for this dataset.</p>';
+ var lg=W.log.slice().reverse();
+ h+='<h3 style="margin-top:28px">Decision log</h3>'+(lg.length?tbl(['When','Skill','Region','Decision','Reason'],lg.map(function(e){return [esc(e.t.slice(0,16).replace('T',' ')),esc(e.skill),esc(e.region),e.decision,esc(e.reason||'')]}))+'<div class="row"><button class="btn alt" id="lcp">Copy log</button></div>':'<p class="note">No decisions yet.</p>');
+ el.innerHTML=h;
+ el.querySelectorAll('[data-d]').forEach(function(b){b.onclick=function(){var i=+b.getAttribute('data-i'),d=b.getAttribute('data-d'),rs=$('rs'+i).value.trim();
+  if(d!=='Accept'&&!rs){$('re'+i).textContent='Please give a reason.';return}
+  var x=P[i];W.log.push({t:new Date().toISOString(),key:key(x.r),skill:x.r.name,region:x.r.region,decision:d,reason:rs,gap:Math.round(x.m.g*10)/10});saveW();rRv()}});
+ if($('lcp'))$('lcp').onclick=function(){copy('when\tskill\tregion\tdecision\treason\n'+lg.map(function(e){return [e.t,e.skill,e.region,e.decision,e.reason||''].join('\t')}).join('\n'),$('lcp'))}}
+// tabs
+function renderTab(n){if(!W)return;({ov:rOv,da:fillData,sk:function(){},gp:rGp,tr:rTr,ro:rRo,rv:rRv})[n]()}
+function showTab(n){curTab=n;$('tabs').querySelectorAll('button').forEach(function(b){var on=b.getAttribute('data-tab')===n;b.classList.toggle('on',on);b.setAttribute('aria-selected',on?'true':'false');b.tabIndex=on?0:-1});
+ ['ov','da','sk','gp','tr','ro','rv'].forEach(function(k){$('tab-'+k).classList.toggle('on',k===n)});renderTab(n)}
+$('tabs').querySelectorAll('button').forEach(function(b){b.onclick=function(){showTab(b.getAttribute('data-tab'))}});
+lastRes=true;function renderRes(){if(W&&$('v-app').classList.contains('on'))renderTab(curTab)}
+// router
+var io=('IntersectionObserver' in window)?new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting){e.target.classList.add('on2');io.unobserve(e.target)}})},{threshold:.1}):null;
+document.querySelectorAll('.rv').forEach(function(e){io?io.observe(e):e.classList.add('on2')});
+function route(){var r=location.hash.replace('#/',''),u=user();document.body.classList.toggle('in',!!u);
+ var v=({login:1,app:1,plans:1,privacy:1,terms:1,refund:1,cookies:1,contact:1,data:1})[r]?r:'about';
+ if((v==='app'||v==='plans')&&!u){location.hash='#/login';return}
+ if(v==='login'&&u&&u!=='__guest__'){location.hash='#/app';return}
+ ['about','login','app','plans','privacy','terms','refund','cookies','contact','data'].forEach(function(n){$('v-'+n).classList.toggle('on',n===v)});
+ if(v==='plans')renderPlans();if(v==='app'){loadW();$('who').textContent=isG()?'Guest session: your work is lost when you close this tab.':'Signed in as '+user();showTab('ov')}window.scrollTo(0,0);setBg(v);focusView(v);
+ var h=$('h1');if(v==='about'){h.querySelectorAll('.w').forEach(function(w){w.style.animation='none';void w.offsetWidth;w.style.animation=''})}}
+// intro, progress, home
+var reduced=!!(window.matchMedia&&matchMedia('(prefers-reduced-motion:reduce)').matches);
+var intro=$('intro');
+function endIntro(){if(!intro)return;var i=intro;intro=null;document.body.classList.add('ready');i.classList.add('out');setTimeout(function(){i.remove()},1000)}
+if(reduced||get('sg_intro',1)){intro.remove();intro=null;document.body.classList.add('ready')}
+else{set('sg_intro',1,1);var ld=get('sg_film')!=='off'?1700:0;var ttl=function(){if(!intro)return;intro.innerHTML='<div class="inw" id="inw"></div><div class="inl"></div><div class="ins">SIH 2026</div>';$('inw').innerHTML='Skill Verse'.split('').map(function(c,i){return '<span class="il" style="--i:'+i+'">'+(c===' '?'&nbsp;':c)+'</span>'}).join('')};if(ld){intro.innerHTML='<svg class="ldr" viewBox="0 0 220 220" aria-hidden="true"><circle class="ldc" cx="110" cy="110" r="96"/><circle class="ldc" cx="110" cy="110" r="74"/><line class="ldc" x1="10" x2="210" y1="110" y2="110"/><line class="ldc" x1="110" x2="110" y1="10" y2="210"/><path class="ldw" d="M110 110L110 14A96 96 0 0 1 206 110z"/><text id="ldn" x="110" y="140" text-anchor="middle">3</text></svg>';setTimeout(function(){if(intro&&$('ldn'))$('ldn').textContent='2'},550);setTimeout(function(){if(intro&&$('ldn'))$('ldn').textContent='1'},1100);setTimeout(ttl,ld)}else ttl();setTimeout(endIntro,ld+2300);intro.onclick=endIntro;document.addEventListener('keydown',endIntro,{once:true})}
+var spb=$('sp');window.addEventListener('scroll',function(){var d=document.documentElement,m=d.scrollHeight-d.clientHeight;spb.style.transform='scaleX('+(m>0?d.scrollTop/m:0)+')';d.style.setProperty('--sy',d.scrollTop)},{passive:true});
+var DEMO={name:'Data Analytics',region:'Jaipur',h:[78,98,96,121,118,146,142,171],sup:120},demoDone=false;
+function demo(){if(demoDone)return;demoDone=true;$('dm').innerHTML=lineChart(DEMO)}
+if('IntersectionObserver' in window){new IntersectionObserver(function(es,ob){if(es[0].isIntersecting){demo();ob.disconnect()}},{threshold:.3}).observe($('dm'))}else demo();
+// background animations, art, icons
+var cv=$('bg'),cx=cv.getContext('2d'),bgm='none',P=[],raf=0,last=0,ph=0,motion=!reduced&&get('sg_motion')!=='off';
+function isDark(){return getComputedStyle(document.documentElement).getPropertyValue('--bg').trim()==='#000'}
+function bgSize(){var d=Math.min(window.devicePixelRatio||1,1.5);cv.width=Math.round(innerWidth*d);cv.height=Math.round(innerHeight*d);cx.setTransform(d,0,0,d,0,0);bgInit()}
+function bgInit(){P=[];var w=innerWidth,h=innerHeight,i,n;
+ if(bgm==='net'){n=Math.min(70,Math.round(w*h/18000));for(i=0;i<n;i++)P.push({x:Math.random()*w,y:Math.random()*h,vx:(Math.random()-.5)*.45,vy:(Math.random()-.5)*.45})}
+ if(bgm==='dust'){n=Math.min(110,Math.round(w*h/9000));for(i=0;i<n;i++)P.push({x:Math.random()*w,y:Math.random()*h,r:Math.random()*1.6+.4,v:Math.random()*.3+.06,a:Math.random()*.4+.12,d:Math.random()*6})}}
+function bgStep(){var w=innerWidth,h=innerHeight;
+ if(bgm==='net')P.forEach(function(p){p.x+=p.vx;p.y+=p.vy;if(p.x<0||p.x>w)p.vx*=-1;if(p.y<0||p.y>h)p.vy*=-1});
+ if(bgm==='dust')P.forEach(function(p){p.y-=p.v;p.x+=Math.sin(p.y/60+p.d)*.25;if(p.y<-4){p.y=h+4;p.x=Math.random()*w}});
+ ph+=.014}
+function bgDraw(ts){var w=innerWidth,h=innerHeight,c=isDark()?'255,255,255':'0,0,0',i,j,k;cx.clearRect(0,0,w,h);cx.lineWidth=1;
+ if(bgm==='net'){for(i=0;i<P.length;i++){for(j=i+1;j<P.length;j++){var dx=P[i].x-P[j].x,dy=P[i].y-P[j].y,d=Math.sqrt(dx*dx+dy*dy);if(d<150){cx.strokeStyle='rgba('+c+','+(0.2*(1-d/150)).toFixed(3)+')';cx.beginPath();cx.moveTo(P[i].x,P[i].y);cx.lineTo(P[j].x,P[j].y);cx.stroke()}}
+  cx.fillStyle='rgba('+c+',.3)';cx.beginPath();cx.arc(P[i].x,P[i].y,2,0,6.2832);cx.fill()}}
+ else if(bgm==='rings'){[[w*.74,h*.32],[w*.16,h*.82]].forEach(function(o,q){for(k=0;k<6;k++){var r=((ts/45+k*80+q*40)%480);cx.strokeStyle='rgba('+c+','+(0.2*(1-r/480)).toFixed(3)+')';cx.beginPath();cx.arc(o[0],o[1],r,0,6.2832);cx.stroke()}})}
+ else if(bgm==='waves'){cx.strokeStyle='rgba('+c+',.05)';for(i=0;i<w;i+=80){cx.beginPath();cx.moveTo(i,0);cx.lineTo(i,h);cx.stroke()}
+  for(k=0;k<5;k++){cx.strokeStyle='rgba('+c+','+(0.1+k*.02).toFixed(2)+')';cx.beginPath();for(i=0;i<=w;i+=12){var y=h*(.22+.15*k)+Math.sin(i/(110+k*30)+ph*(1+k*.25))*(22+k*7);i?cx.lineTo(i,y):cx.moveTo(i,y)}cx.stroke()}}
+ else if(bgm==='dust'){P.forEach(function(p){cx.fillStyle='rgba('+c+','+(p.a*(.6+.4*Math.sin(ts/900+p.d))).toFixed(3)+')';cx.beginPath();cx.arc(p.x,p.y,p.r,0,6.2832);cx.fill()})}}
+function bgLoop(ts){raf=0;if(!motion||bgm==='none'||document.hidden)return;if(ts-last>32){last=ts;bgStep();bgDraw(ts)}raf=requestAnimationFrame(bgLoop)}
+function bgStart(){if(raf)return;bgDraw(performance.now());if(motion&&bgm!=='none')raf=requestAnimationFrame(bgLoop)}
+function setBg(v){bgm=({about:'net',login:'rings',app:'waves',plans:'dust'})[v]||'none';cv.style.display=bgm==='none'?'none':'block';if(raf){cancelAnimationFrame(raf);raf=0}bgInit();if(bgm!=='none')bgStart()}
+function setMotion(on){motion=on&&!reduced;document.body.classList.toggle('still',!motion);var b=$('mt');b.setAttribute('aria-pressed',motion?'true':'false');b.textContent=motion?'✦':'✧';if(motion&&bgm!=='none')bgStart()}
+bgSize();setMotion(motion);
+$('mt').onclick=function(){if(reduced)return;set('sg_motion',motion?'off':'on');setMotion(!motion)};
+if(reduced)$('mt').disabled=true;
+document.addEventListener('visibilitychange',function(){if(!document.hidden&&bgm!=='none')bgStart()});
+window.addEventListener('resize',function(){bgSize();if(bgm!=='none')bgDraw(performance.now())});
+// illustrations (original vector drawings)
+function heroArt(){var seed=11,s,i;function rnd(){seed=(seed*9301+49297)%233280;return seed/233280}
+ s='<svg viewBox="0 0 520 380" width="100%" role="img" aria-label="Illustration: a city skyline behind a rising bar chart, showing skill demand growing across a region">';
+ s+='<circle class="sn sm2 spin" cx="432" cy="62" r="46" stroke-width="1.5" stroke-dasharray="2 8"/><circle class="sf" cx="432" cy="62" r="24"/>';
+ var B=[[140,46,250,'fl'],[210,40,272,'fl'],[300,50,240,'fl'],[366,40,262,'fl'],[8,52,150,'fl'],[56,44,190,'fl'],[440,52,170,'fl'],[18,48,110,'sf'],[66,52,140,'sf'],[452,44,96,'sf'],[484,32,120,'sf']];
+ B.forEach(function(b){var x=b[0],w=b[1],h=b[2],top=340-h;s+='<rect class="'+b[3]+'" x="'+x+'" y="'+top+'" width="'+w+'" height="'+h+'"/>';
+  for(var c=0;c<Math.floor((w-8)/12);c++)for(var r=0;r<Math.floor((h-14)/17);r++){var t2=rnd()<.2;s+='<rect class="fb'+(t2?' wt':'')+'" '+(t2?'style="animation-delay:'+(rnd()*4).toFixed(1)+'s" ':'')+'x="'+(x+6+c*12)+'" y="'+(top+8+r*17)+'" width="6" height="9"/>'}});
+ s+='<rect class="fb ss" x="110" y="110" width="316" height="230" rx="6" stroke-width="2.5"/><rect class="fm" x="128" y="126" width="96" height="7"/><rect class="fl" x="128" y="140" width="64" height="5"/>';
+ for(i=1;i<=3;i++)s+='<line class="sl" x1="128" x2="408" y1="'+(316-i*52)+'" y2="'+(316-i*52)+'"/>';
+ var H=[38,62,56,98,126,168],pts=[];
+ H.forEach(function(h,q){var x=132+q*48;s+='<rect class="sf bar" style="--i:'+q+'" x="'+x+'" y="'+(316-h)+'" width="32" height="'+h+'"/>';pts.push((x+16)+' '+(316-h-14))});
+ s+='<path class="sn ss dr" pathLength="1" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" d="M'+pts.join('L')+'"/><polygon class="sf" points="398,122 380,128 392,142"/>';
+ s+='<line class="ss" x1="0" x2="520" y1="340" y2="340" stroke-width="2"/>';
+ [[60,0],[476,1]].forEach(function(f){var x=f[0];s+='<circle class="sf" cx="'+x+'" cy="304" r="8"/><path class="sf" d="M'+(x-11)+' 340v-22a11 11 0 0 1 22 0v22z"/>'+(f[1]?'<path class="sn ss" stroke-width="4" stroke-linecap="round" d="M'+(x-8)+' 322l-14-14"/>':'')});
+ return s+'</svg>'}
+function stairsArt(){var s='<svg viewBox="0 0 420 340" width="100%" role="img" aria-label="Illustration: five rising steps with a person standing on the middle step and a flag at the top, showing growth in skills">',i;
+ s+='<circle class="sn sm2 spin" cx="70" cy="64" r="40" stroke-width="1.5" stroke-dasharray="2 8"/><circle class="sf" cx="70" cy="64" r="20"/>';
+ for(i=0;i<5;i++){var h=40+i*44;s+='<rect class="'+(i%2?'sf':'fb ss')+' bar" style="--i:'+i+'" x="'+(30+i*66)+'" y="'+(300-h)+'" width="62" height="'+h+'" stroke-width="2.5"/>'}
+ s+='<circle class="sf" cx="193" cy="142" r="7"/><path class="sf" d="M183 172v-18a10 10 0 0 1 20 0v18z"/><line class="ss" stroke-width="2.5" x1="325" x2="325" y1="84" y2="32"/><polygon class="sf flag" points="325,32 362,43 325,56"/><line class="ss" stroke-width="2" x1="10" x2="410" y1="300" y2="300"/></svg>';return s}
+var ICO={collect:'<circle cx="10" cy="10" r="6"/><path d="M15 15l6 6"/>',understand:'<path d="M6 3h9l4 4v14H6z"/><path d="M9 11h7M9 14h7M9 17h4"/>',forecast:'<path d="M3 20h18M4 16l5-5 4 3 7-8"/><path d="M15 6h5v5"/>',compare:'<path d="M12 4v16M6 20h12M4 8h16M4 8l-3 6h6zM20 8l-3 6h6z"/>',recommend:'<path d="M9 18h6M10 21h4M12 3a6 6 0 0 0-4 10c1 1 1 3 1 3h6s0-2 1-3a6 6 0 0 0-4-10z"/>',student:'<path d="M2 9l10-5 10 5-10 5z"/><path d="M6 11v5c3 3 9 3 12 0v-5"/>',employer:'<rect x="3" y="7" width="18" height="13" rx="2"/><path d="M9 7V5h6v2M3 13h18"/>',institute:'<path d="M3 10l9-6 9 6M5 10v9M9 10v9M15 10v9M19 10v9M3 21h18"/>',policy:'<path d="M12 21s-6-6-6-11a6 6 0 0 1 12 0c0 5-6 11-6 11z"/><circle cx="12" cy="10" r="2"/>'};
+function ico(k){return '<svg class="ic" viewBox="0 0 24 24" width="40" height="40" aria-hidden="true">'+ICO[k]+'</svg>'}
+$('ha').innerHTML=heroArt();$('la').innerHTML=stairsArt();
+$('hg').onclick=function(){$('gb').click()};
+var GLOSS='<details class="gl"><summary>Plain-language guide</summary><dl><dt>Demand</dt><dd>How many jobs or postings ask for a skill each month.</dd><dt>Supply</dt><dd>How many trained people become available for that skill each month.</dd><dt>Gap</dt><dd>Forecast demand minus supply. A positive gap means there may not be enough trained people.</dd><dt>Shortage, Balanced, Surplus</dt><dd>Shortage: demand is more than 10% above supply. Surplus: more than 10% below. Balanced: in between.</dd><dt>80% range</dt><dd>The span where the forecast is likely to fall about 8 times out of 10, based on how scattered your past numbers were.</dd><dt>Confidence</dt><dd>How well a straight-line trend fits your history (R²). Low means treat the forecast with care.</dd></dl></details>';
+// home render (pipeline with icons, audiences)
+function renderHome(){var o=$('pp');if(!o)return;var ik=['collect','understand','forecast','compare','recommend'],wk=['student','employer','institute','policy'];
+ o.innerHTML=[1,2,3,4,5].map(function(i){return '<li style="--i:'+i+'">'+ico(ik[i-1])+'<span class="mono">0'+i+'</span><b>'+esc(t('s'+i))+'</b><p>'+esc(t('s'+i+'d'))+'</p></li>'}).join('');
+ $('wh').innerHTML=[1,2,3,4].map(function(i){return '<div class="cell rv">'+ico(wk[i-1])+'<h3>'+esc(t('w'+i))+'</h3><p>'+esc(t('w'+i+'d'))+'</p></div>'}).join('');
+ [].forEach.call(document.querySelectorAll('#wh .rv'),function(e){io?io.observe(e):e.classList.add('on2')});
+ $('mt').setAttribute('aria-label',t('mot'));$('fm').setAttribute('aria-label',t('film'));$('kbb').setAttribute('aria-label',t('kb_t'));$('reel').setAttribute('aria-label',t('r_watch'))}
+// team
+var TEAM=[
+["Namra Choudhary",1,"Computer Science & Engineering","Namrachoudhary260@gmail.com","8233288284"],
+["Sonam",0,"Mechanical Engineering","sonamjakhar832@gmail.com","9079238218"],
+["Harshlata",0,"Mechanical Engineering","harshumaidam@gmail.com","9950496658"],
+["Anshu Kumawat",0,"Computer Science & Engineering","anshukumawat5055@gmail.com","8279216197"],
+["Hemang Choudhary",0,"Computer Science & Engineering","hemangchoudhary02@gmail.com","9829135564"],
+["Amit Singh",0,"Computer Science & Engineering","amitshekhawatpalwas@gmail.com","7737302421"]];
+var tsel=-1;
+function renderTeam(){var g=$('tm');if(!g)return;
+ g.innerHTML=TEAM.map(function(m,i){return '<button type="button" class="cell mem" aria-expanded="'+(i===tsel)+'" aria-controls="md" data-m="'+i+'"><h3>'+esc(m[0])+'</h3><p class="mono">'+esc(t(m[1]?'m_lead':'m_mem'))+'</p></button>'}).join('');
+ g.querySelectorAll('button').forEach(function(b){b.onclick=function(){var i=+b.getAttribute('data-m');tsel=tsel===i?-1:i;renderTeam();g.querySelector('[data-m="'+i+'"]').focus()}});
+ var d=$('md');if(tsel<0){d.hidden=true;d.innerHTML='';return}var m=TEAM[tsel];d.hidden=false;
+ d.innerHTML='<h3>'+esc(m[0])+'</h3><p class="note" style="margin:0 0 8px">'+esc(t(m[1]?'m_lead':'m_mem'))+'</p><p style="margin:4px 0"><span class="mono">'+esc(t('m_stream'))+':</span> '+esc(m[2])+'</p><p style="margin:4px 0"><span class="mono">'+esc(t('m_year'))+':</span> 2026-27</p><p style="margin:4px 0"><span class="mono">'+esc(t('m_email'))+':</span> <a href="mailto:'+esc(m[3])+'">'+esc(m[3])+'</a></p><p style="margin:4px 0"><span class="mono">'+esc(t('m_mob'))+':</span> <a href="tel:+91'+m[4]+'">+91 '+m[4]+'</a></p>'}
+// old-film theme
+var film=get('sg_film')!=='off',fxc=$('fx'),fcx=fxc.getContext('2d'),fxT=0,rcT=0,burn=0;
+function fxSize(){fxc.width=innerWidth;fxc.height=innerHeight}
+function fxDraw(){var w=innerWidth,h=innerHeight,c=isDark()?'255,255,255':'0,0,0',i,n;fcx.clearRect(0,0,w,h);
+ if(Math.random()<.55){n=1+(Math.random()*2|0);for(i=0;i<n;i++){var x=Math.random()*w;fcx.strokeStyle='rgba('+c+','+(.14+Math.random()*.26).toFixed(2)+')';fcx.lineWidth=Math.random()<.2?2:1;fcx.beginPath();fcx.moveTo(x,Math.random()*h*.2);fcx.lineTo(x+(Math.random()*6-3),h*(.4+Math.random()*.6));fcx.stroke()}}
+ n=5+(Math.random()*10|0);for(i=0;i<n;i++){fcx.fillStyle='rgba('+c+','+(.2+Math.random()*.35).toFixed(2)+')';fcx.beginPath();fcx.arc(Math.random()*w,Math.random()*h,Math.random()*1.8+.4,0,6.2832);fcx.fill()}
+ if(Math.random()<.06){var hx=Math.random()*w,hy=Math.random()*h;fcx.strokeStyle='rgba('+c+',.35)';fcx.lineWidth=1;fcx.beginPath();fcx.moveTo(hx,hy);fcx.bezierCurveTo(hx+12,hy-10,hx+22,hy+14,hx+34,hy+2);fcx.stroke()}
+ if(burn>0){burn--;fcx.fillStyle='rgba('+c+',.55)';fcx.beginPath();fcx.arc(w-60,50,14,0,6.2832);fcx.fill()}else if(Math.random()<.012)burn=3}
+function fmtRc(){var ms=performance.now(),s=Math.floor(ms/1000),f=Math.floor((ms%1000)/(1000/24)),p=function(v){return ('0'+v).slice(-2)};$('rc').textContent='REEL 01 · '+p(Math.floor(s/3600))+':'+p(Math.floor(s/60)%60)+':'+p(s%60)+':'+p(f)}
+function fxSync(){var on=film&&motion&&!document.hidden;if(on&&!fxT){fxT=setInterval(fxDraw,90);rcT=setInterval(fmtRc,100)}if(!on){clearInterval(fxT);clearInterval(rcT);fxT=rcT=0;fcx.clearRect(0,0,fxc.width,fxc.height);if(!film||!motion)$('rc').textContent=''}}
+function setFilm(on){film=on;document.body.classList.toggle('film',on);var b=$('fm');b.setAttribute('aria-pressed',on?'true':'false');b.textContent=on?'▣':'▢';fxSync()}
+var setMotion0=setMotion;setMotion=function(on){setMotion0(on);fxSync()};
+fxSize();window.addEventListener('resize',fxSize);document.addEventListener('visibilitychange',fxSync);
+$('fm').onclick=function(){set('sg_film',film?'off':'on');setFilm(!film)};
+setFilm(film);fxSync();
+// dialogs and shortcuts
+var dopen=null,dprev=null;
+function openDlg(el,f){dprev=document.activeElement;el.hidden=false;dopen=el;(f||el.querySelector('button')).focus()}
+function closeDlg(){if(!dopen)return;dopen.hidden=true;dopen=null;if(dprev&&dprev.focus)dprev.focus()}
+$('kbb').onclick=function(){openDlg($('kb'))};$('kbc').onclick=closeDlg;
+document.addEventListener('keydown',function(e){
+ if(dopen){if(e.key==='Escape'){e.preventDefault();if(dopen.id==='reel')reelStop();closeDlg();return}
+  if(e.key==='Tab'){var f=[].slice.call(dopen.querySelectorAll('button,a[href]')).filter(function(x){return !x.disabled&&x.offsetParent!==null}),i=f.indexOf(document.activeElement);if(f.length&&((e.shiftKey&&i<=0)||(!e.shiftKey&&(i===f.length-1||i<0)))){e.preventDefault();f[e.shiftKey?f.length-1:0].focus()}}
+  if(dopen.id==='reel'){if(e.key==='ArrowRight')reelGo(1);if(e.key==='ArrowLeft')reelGo(-1)}return}
+ var tg=e.target&&e.target.tagName;if(/INPUT|TEXTAREA|SELECT/.test(tg)||e.ctrlKey||e.metaKey||e.altKey)return;
+ if(e.key==='?'){openDlg($('kb'));return}
+ if(e.key==='f')$('fm').click();if(e.key==='m')$('mt').click();
+ if(/^[1-7]$/.test(e.key)&&$('v-app').classList.contains('on')){var b=tbs[+e.key-1];if(b)showTab(b.getAttribute('data-tab'))}});
+// story reel (silent-film title cards)
+var ri=0,rplay=false,rtm=0;
+function reelCards(){var rn=['I','II','III','IV','V'],c=[{k:'',h:t('r0t'),p:t('r0s')}],i;for(i=1;i<=5;i++)c.push({k:'— '+rn[i-1]+' —',h:t('s'+i),p:t('s'+i+'d')});c.push({k:'',h:t('r_fin'),p:'',last:true});return c}
+function reelDraw(){var c=reelCards()[ri];$('rcard').innerHTML='<div class="rk">'+esc(c.k)+'</div><h2 class="rt">'+esc(c.h)+'</h2><p class="rp">'+esc(c.p)+'</p>'+(c.last?'<div class="row" style="justify-content:center"><button class="btn alt" id="rgst" type="button">'+esc(t('guest'))+'</button></div>':'');
+ $('rn').textContent=(ri+1)+' / 7';$('rpp').textContent=t(rplay?'r_pause':'r_play');
+ if($('rgst'))$('rgst').onclick=function(){reelStop();closeDlg();$('gb').click()}}
+function reelSched(){clearTimeout(rtm);if(ri>=6)rplay=false;if(rplay)rtm=setTimeout(function(){reelGo(1)},5200)}
+function reelGo(d){ri=Math.max(0,Math.min(6,ri+d));reelSched();reelDraw()}
+function reelStop(){rplay=false;clearTimeout(rtm)}
+$('rw').onclick=function(){ri=0;rplay=!reduced;reelSched();reelDraw();openDlg($('reel'),$('rnx'))};
+$('rpv').onclick=function(){reelGo(-1)};$('rnx').onclick=function(){reelGo(1)};
+$('rpp').onclick=function(){rplay=!rplay;reelSched();reelDraw()};
+$('rcl').onclick=function(){reelStop();closeDlg()};
+// extra features
+var owned={},ra='',rb='';
+function careerFinder(){var el=$('cpf');if(!el)return;var by={};W.rows.forEach(function(r){(by[r.name]=by[r.name]||[]).push({m:mdl(r),rg:r.region})});var names=Object.keys(by).sort();
+ el.innerHTML='<h3 style="margin-top:30px">Career path finder</h3><p class="note">Tick the skills you already have. The others are ranked by how fast demand is growing and how short supply is. A planning aid based on your data, not career advice.</p><div class="row" style="margin-top:8px">'+names.map(function(n,i){return '<label class="chk" style="margin:4px 14px 4px 0"><input type="checkbox" data-n="'+i+'"'+(owned[n]?' checked':'')+'><span>'+esc(n)+'</span></label>'}).join('')+'</div><div id="cpo" aria-live="polite"></div>';
+ function out(){var R=names.filter(function(n){return !owned[n]}).map(function(n){var a=by[n],g=a.reduce(function(s,x){return s+x.m.gr},0)/a.length,q=a.reduce(function(s,x){return s+x.m.q},0)/a.length;return {n:n,g:g,q:q,sc:g+q*100,rg:a.filter(function(x){return x.m.s==='Shortage'}).map(function(x){return x.rg})}}).sort(function(a,b){return b.sc-a.sc}).slice(0,3);
+  $('cpo').innerHTML=R.length?tbl(['Rank','Skill to consider','Demand growth','Gap vs supply','Short in'],R.map(function(r,i){return [i+1,esc(r.n),sg(r.g)+'%',sg(r.q*100)+'%',esc(r.rg.join(', ')||'none')]})):'<p class="note">You ticked every skill.</p>'}
+ el.querySelectorAll('input').forEach(function(c){c.onchange=function(){owned[names[+c.getAttribute('data-n')]]=c.checked;out()}});out()}
+function cmpDraw(){var el=$('cmp');if(!el)return;var rgs=[];W.rows.forEach(function(r){if(rgs.indexOf(r.region)<0)rgs.push(r.region)});
+ if(rgs.length<2){el.innerHTML='<p class="note">Add data for at least two regions to compare them.</p>';return}
+ if(rgs.indexOf(ra)<0)ra=rgs[0];if(rgs.indexOf(rb)<0||rb===ra)rb=rgs.filter(function(g){return g!==ra})[0];
+ var opt=function(v){return rgs.map(function(g){return '<option'+(g===v?' selected':'')+'>'+esc(g)+'</option>'}).join('')};
+ var M=function(g){var o={};W.rows.forEach(function(r){if(r.region===g)o[r.name]=mdl(r)});return o},A=M(ra),Bm=M(rb),names=Object.keys(A).concat(Object.keys(Bm).filter(function(k){return !(k in A)}));
+ var R=names.map(function(n){return {n:n,a:A[n]?A[n].q*100:null,b:Bm[n]?Bm[n].q*100:null}}).sort(function(x,y){return Math.abs((y.a||0)-(y.b||0))-Math.abs((x.a||0)-(x.b||0))});
+ el.innerHTML='<div class="row" style="margin-top:0"><div><label for="cmpa">Region A</label><select id="cmpa">'+opt(ra)+'</select></div><div><label for="cmpb">Region B</label><select id="cmpb">'+opt(rb)+'</select></div></div>'+tbl(['Skill','Gap in '+esc(ra),'Gap in '+esc(rb),'Needs it more'],R.map(function(r){var f=function(v){return v===null?'–':sg(v)+'%'};return [esc(r.n),f(r.a),f(r.b),r.a===null||r.b===null?'–':r.a===r.b?'Same':esc(r.a>r.b?ra:rb)]}))+'<p class="note">Gap % = (forecast − supply) / supply. A dash means the skill has no data in that region.</p>';
+ $('cmpa').onchange=function(){ra=this.value;cmpDraw()};$('cmpb').onchange=function(){rb=this.value;cmpDraw()}}
+function dataChecks(){var R=W.rows,sh=R.filter(function(r){return r.h.length<6}).length,zr=R.filter(function(r){return r.sup===0}).length,seen={},dp=0,ot=0,L=[];
+ R.forEach(function(r){var k=r.name+'|'+r.region;if(seen[k])dp++;seen[k]=1;var s=r.h.slice().sort(function(a,b){return a-b}),md=s[Math.floor(s.length/2)];if(md>0&&s[s.length-1]>3*md)ot++});
+ if(sh)L.push(sh+' series have fewer than 6 data points, so the accuracy backtest skips them and confidence is limited.');if(zr)L.push(zr+' series have zero supply, so their gap % is not meaningful.');if(dp)L.push(dp+' skill + region pairs appear more than once; charts use the last one.');if(ot)L.push(ot+' series contain a value more than 3 times their typical (median) value. Check for typing mistakes.');
+ return '<h3 style="margin-top:28px">Data checks</h3>'+(L.length?'<ul class="steps">'+L.map(function(x){return '<li>'+esc(x)+'</li>'}).join('')+'</ul>':'<p class="note">No problems found: every series has 6+ points, non-zero supply, no duplicates and no extreme values.</p>')}
+// compliance, consent, accessibility
+var CONTACT_EMAIL='';
+if(CONTACT_EMAIL){$('ce').hidden=false;$('ce').innerHTML='Email: <a href="mailto:'+esc(CONTACT_EMAIL)+'">'+esc(CONTACT_EMAIL)+'</a>'}
+function gfonts(on){var o=$('gf');if(o)o.remove();if(on){var l=document.createElement('link');l.id='gf';l.rel='stylesheet';l.href='https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,wght@1,500;1,700&family=Playfair+Display:ital,wght@1,500;1,700&family=Cormorant+Garamond:ital,wght@1,500;1,600&family=Lora:ital,wght@1,400;1,500&family=Space+Mono:ital@1&family=Noto+Serif+Devanagari:wght@400;600&family=IM+Fell+English:ital@0;1&display=swap';document.head.appendChild(l)}}
+function cbShow(v){$('cb').hidden=!v;document.body.classList.toggle('cbon',v)}
+var cs=get('sg_consent');gfonts(cs==='all');cbShow(!cs);
+$('cba').onclick=function(){set('sg_consent','all');gfonts(true);cbShow(false)};
+$('cbr').onclick=function(){set('sg_consent','essential');gfonts(false);cbShow(false)};
+$('cset').onclick=function(){cbShow(true);$('cba').focus()};
+$('skip').onclick=function(e){e.preventDefault();$('main').focus()};
+var first=true;
+function focusView(v){if(first){first=false;return}var h=document.querySelector('#v-'+v+' h1, #v-'+v+' h2');if(h){h.setAttribute('tabindex','-1');h.focus({preventScroll:true})}}
+// tabs keyboard support
+var tbs=Array.prototype.slice.call($('tabs').querySelectorAll('button'));
+$('tabs').setAttribute('role','tablist');
+tbs.forEach(function(b){b.setAttribute('role','tab')});
+['ov','da','sk','gp','tr','ro','rv'].forEach(function(k){$('tab-'+k).setAttribute('role','tabpanel')});
+$('tabs').onkeydown=function(e){var i=tbs.indexOf(document.activeElement);if(i<0)return;var n={ArrowRight:(i+1)%tbs.length,ArrowLeft:(i+tbs.length-1)%tbs.length,Home:0,End:tbs.length-1}[e.key];if(n===undefined)return;e.preventDefault();tbs[n].focus();showTab(tbs[n].getAttribute('data-tab'))};
+// data deletion
+var armed={};
+function two(id,fn){$(id).onclick=function(){var b=$(id);if(!armed[id]){armed[id]=1;b.dataset.o=b.textContent;b.textContent='Click again to confirm';setTimeout(function(){if(armed[id]){armed[id]=0;b.textContent=b.dataset.o}},5000);return}armed[id]=0;b.textContent=b.dataset.o;fn()}}
+function msg(s){$('dmsg').textContent=s}
+function rm(k,s){try{(s?sessionStorage:localStorage).removeItem(k)}catch(e){}delete mem[k]}
+$('dex').onclick=function(){var u=user();if(!u){msg('You are not logged in, so there is no account data to export.');return}var d={account:isG()?'guest':u,plan:isG()?null:((users()[u]||{}).plan||null),workspace:get(wk(),isG())};copy(JSON.stringify(d,null,2),$('dex'));msg('Copied to your clipboard as JSON. The password hash is not included.')};
+two('dws',function(){var u=user();if(!u){msg('You are not logged in, so there is no workspace to clear.');return}rm(wk(),isG());W=null;msg('Workspace cleared.')});
+two('dac',function(){var u=user();if(!u){msg('No account is logged in.');return}
+ if(!isG()){var U=users();delete U[u];set('sg_users',U)}
+ rm(wk(),isG());rm('sg_session',1);W=null;location.hash='#/';route()});
+two('dall',function(){[localStorage,sessionStorage].forEach(function(st){try{Object.keys(st).filter(function(k){return k.indexOf('sg_')===0}).forEach(function(k){st.removeItem(k)})}catch(e){}});mem={};W=null;gfonts(false);cbShow(true);location.hash='#/';route()});
+window.addEventListener('hashchange',route);apply();route();
+})();
+</script>
+</body>
+</html>
